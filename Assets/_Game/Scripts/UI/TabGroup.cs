@@ -7,7 +7,7 @@ public class TabGroup : MonoBehaviour
     [SerializeField]
     private List<TabButton> tabButtonList;
     [SerializeField]
-    private List<ShopPage> pageLists;
+    private List<ShopSkinPage> skinPageLists;
 
     private TabButton selectedTabButton;
 
@@ -39,15 +39,15 @@ public class TabGroup : MonoBehaviour
 
         int selectedTabIndex = tabButtonList.IndexOf(selectedTabButton);
 
-        for (int i = 0; i < pageLists.Count; i++)
+        for (int i = 0; i < skinPageLists.Count; i++)
         {
             if (i == selectedTabIndex)
             {
-                pageLists[i].Show();
+                skinPageLists[i].Show();
             }
             else
             {
-                pageLists[i].Hide();
+                skinPageLists[i].Hide();
             }
         }
     }

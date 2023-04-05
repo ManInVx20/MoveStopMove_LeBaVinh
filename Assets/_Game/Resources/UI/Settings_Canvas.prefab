@@ -308,7 +308,7 @@ GameObject:
   - component: {fileID: 5795166552827871088}
   - component: {fileID: 5795166552827871091}
   m_Layer: 5
-  m_Name: ToggleButton
+  m_Name: SwitchToggle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1242,6 +1242,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsDestroyOnClose: 0
+  soundSwitchToggle: {fileID: 5795166552827871091}
+  vibrationSwitchToggle: {fileID: 5795166554531523695}
   homeButton: {fileID: 5795166554524559318}
   continueButton: {fileID: 5795166552738045571}
 --- !u!1 &5795166553467992552
@@ -1587,7 +1589,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -2290,7 +2292,7 @@ GameObject:
   - component: {fileID: 5795166554531523696}
   - component: {fileID: 5795166554531523695}
   m_Layer: 5
-  m_Name: ToggleButton
+  m_Name: SwitchToggle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2478,7 +2480,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:

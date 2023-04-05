@@ -28,8 +28,6 @@ public class CharacterVisual : MonoBehaviour
     {
         this.skinSetSO = skinSetSO;
 
-        pantSkinnedMeshRenderer.gameObject.SetActive(true);
-
         if (skinSetSO.BodyMaterial != null)
         {
             bodySkinnedMeshRenderer.material = skinSetSO.BodyMaterial;
@@ -37,6 +35,7 @@ public class CharacterVisual : MonoBehaviour
         if (skinSetSO.PantMaterial != null)
         {
             pantSkinnedMeshRenderer.material = skinSetSO.PantMaterial;
+            pantSkinnedMeshRenderer.gameObject.SetActive(true);
         }
         if (skinSetSO.HatPrefab != null)
         {
@@ -64,22 +63,27 @@ public class CharacterVisual : MonoBehaviour
 
             pantSkinnedMeshRenderer.gameObject.SetActive(false);
 
-            if (hatTransform.childCount > 0)
-            {
-                Destroy(hatTransform.GetChild(0).gameObject);
-            }
-            if (topHatTransform.childCount > 0)
-            {
-                Destroy(topHatTransform.GetChild(0).gameObject);
-            }
-            if (wingTransform.childCount > 0)
-            {
-                Destroy(wingTransform.GetChild(0).gameObject);
-            }
-            if (tailTransform.childCount > 0)
-            {
-                Destroy(tailTransform.GetChild(0).gameObject);
-            }
+            hatTransform.ClearChildren();
+            topHatTransform.ClearChildren();
+            wingTransform.ClearChildren();
+            tailTransform.ClearChildren();
+
+            //if (hatTransform.childCount > 0)
+            //{
+            //    Destroy(hatTransform.GetChild(0).gameObject);
+            //}
+            //if (topHatTransform.childCount > 0)
+            //{
+            //    Destroy(topHatTransform.GetChild(0).gameObject);
+            //}
+            //if (wingTransform.childCount > 0)
+            //{
+            //    Destroy(wingTransform.GetChild(0).gameObject);
+            //}
+            //if (tailTransform.childCount > 0)
+            //{
+            //    Destroy(tailTransform.GetChild(0).gameObject);
+            //}
         }
     }
 }

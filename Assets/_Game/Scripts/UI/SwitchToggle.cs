@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,6 +6,12 @@ using UnityEngine.UI;
 
 public class SwitchToggle : MonoBehaviour
 {
+    public class OnValueChangedEventArgs : EventArgs
+    {
+        public bool Value;
+    }
+    public event EventHandler<OnValueChangedEventArgs> OnValueChanged;
+
     [SerializeField]
     private Image handleImage;
     [SerializeField]
@@ -22,15 +29,8 @@ public class SwitchToggle : MonoBehaviour
         toggle.onValueChanged.AddListener(OnSwitchToggle);
     }
 
-    private void Start()
+    public void OnSwitchToggle(bool value)
     {
-        OnSwitchToggle(toggle.isOn);
-    }
-
-    private void OnSwitchToggle(bool value)
-    {
-        SoundManager.Instance.PlayButtonClickSound();
-
         if (value)
         {
             handleImage.rectTransform.anchoredPosition = handlePosition;
@@ -41,5 +41,10 @@ public class SwitchToggle : MonoBehaviour
             handleImage.rectTransform.anchoredPosition = -1.0f * handlePosition;
             handleImage.sprite = offSprite;
         }
+
+        OnValueChanged?.Invoke(this, new OnValueChangedEventArgs
+        {
+            Value = value
+        });
     }
 }

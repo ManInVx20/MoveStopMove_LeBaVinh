@@ -205,6 +205,16 @@ public class Character : PoolableObject
         }
     }
 
+    public void UpdateWeaponSO(WeaponSO weaponSO)
+    {
+        DespawnWeapon();
+
+        this.weaponSO = weaponSO;
+
+        GameObject weaponGameObject = Instantiate(this.weaponSO.Prefab, weaponHolder);
+        weapon = weaponGameObject.GetComponent<Weapon>();
+    }
+
     public virtual void Victory()
     {
         ChangeAnim(CharacterAnimator.Anim.Victory);
@@ -277,16 +287,23 @@ public class Character : PoolableObject
         despawned = false;
         target = null;
 
+        ResetAttack();
+
         GetObjectColorSO(out objectColorSO);
         GetSkinSetSO(out skinSetSO);
+        GetWeaponSO(out weaponSO);
 
-        if (objectColorSO != null && skinSetSO == null)
+        if (objectColorSO != null)
         {
             characterVisual.SetBodyMaterial(objectColorSO.NormalMaterial);
         }
-        else
+
+        UpdateSkinSetSO(skinSetSO);
+
+        if (weaponSO != null && weapon == null)
         {
-            UpdateSkinSetSO(skinSetSO);
+            GameObject weaponGameObject = Instantiate(weaponSO.Prefab, weaponHolder);
+            weapon = weaponGameObject.GetComponent<Weapon>();
         }
 
         ParticleSystem.MainModule mainModule = hitVFX.main;
@@ -296,13 +313,6 @@ public class Character : PoolableObject
         mainModule.startColor = new ParticleSystem.MinMaxGradient(GetNormalColor(), GetDeathColor());
 
         ChangeAnim(CharacterAnimator.Anim.Idle);
-
-        if (weapon == null)
-        {
-            weaponSO = ResourceManager.Instance.GetRandomWeaponSO();
-            GameObject weaponGameObject = Instantiate(weaponSO.Prefab, weaponHolder);
-            weapon = weaponGameObject.GetComponent<Weapon>();
-        }
 
         if (characterInfoUI == null)
         {
@@ -334,12 +344,17 @@ public class Character : PoolableObject
 
     protected virtual void GetObjectColorSO(out ObjectColorSO objectColorSO)
     {
-        objectColorSO = ResourceManager.Instance.GetRandomObjectColorSO();
+        objectColorSO = null;
     }
 
     protected virtual void GetSkinSetSO(out SkinSetSO skinSetSO)
     {
         skinSetSO = null;
+    }
+
+    protected virtual void GetWeaponSO(out WeaponSO weaponSO)
+    {
+        weaponSO = null;
     }
 
     private void ChangeSize()

@@ -114,6 +114,11 @@ public class Player : Character
         skinSetSO = ResourceManager.Instance.GetSelectedSkinSetSO();
     }
 
+    protected override void GetWeaponSO(out WeaponSO weaponSO)
+    {
+        weaponSO = ResourceManager.Instance.GetSelectedWeaponSO();
+    }
+
     private void HandleInput()
     {
         moveDirection = Vector3.zero;

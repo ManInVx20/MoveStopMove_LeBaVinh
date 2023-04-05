@@ -13,7 +13,7 @@ public class ShopSkin : MonoBehaviour, IPointerClickHandler
     [SerializeField]
     private GameObject lockedGameObject;
 
-    private ShopPage page;
+    private ShopSkinPage skinPage;
     private SkinSetSO skinSetSO;
 
     private void Awake()
@@ -21,9 +21,9 @@ public class ShopSkin : MonoBehaviour, IPointerClickHandler
         Deactivate();
     }
 
-    public void Initialize(ShopPage page, SkinSetSO skinSetSO)
+    public void Initialize(ShopSkinPage page, SkinSetSO skinSetSO)
     {
-        this.page = page;
+        this.skinPage = page;
         this.skinSetSO = skinSetSO;
 
         skinImage.sprite = this.skinSetSO.Sprite;
@@ -56,6 +56,6 @@ public class ShopSkin : MonoBehaviour, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        page.OnSkinSelected(this);
+        skinPage.OnShopSkinSelected(this);
     }
 }

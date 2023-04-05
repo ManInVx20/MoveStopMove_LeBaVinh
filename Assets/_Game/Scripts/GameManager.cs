@@ -110,7 +110,7 @@ public class GameManager : Singleton<GameManager>
         Time.timeScale = 1.0f;
     }
 
-    public void OpenShop()
+    public void OpenSkinShop()
     {
         cameraFollow.ChangeState(CameraFollow.State.Shop);
 
@@ -120,7 +120,27 @@ public class GameManager : Singleton<GameManager>
         UIManager.Instance.OpenUI<SkinShopCanvas>();
     }
 
-    public void CloseShop()
+    public void CloseSkinShop()
+    {
+        cameraFollow.ChangeState(CameraFollow.State.MainMenu);
+
+        Player.Instance.ChangeAnim(CharacterAnimator.Anim.Idle);
+
+        UIManager.Instance.CloseAll();
+        UIManager.Instance.OpenUI<MainMenuCanvas>();
+    }
+
+    public void OpenWeaponShop()
+    {
+        cameraFollow.ChangeState(CameraFollow.State.Shop);
+
+        Player.Instance.ChangeAnim(CharacterAnimator.Anim.Dance);
+
+        UIManager.Instance.CloseAll();
+        UIManager.Instance.OpenUI<WeaponShopCanvas>();
+    }
+
+    public void CloseWeaponShop()
     {
         cameraFollow.ChangeState(CameraFollow.State.MainMenu);
 

@@ -5,7 +5,8 @@ using UnityEngine;
 [CreateAssetMenu]
 public class WeaponSO : ScriptableObject
 {
-    public GameObject Prefab;
-    public Sprite Sprite;
     public string Name;
+    public int Cost;
+    public Sprite Sprite;
+    public GameObject Prefab;
 }

@@ -8,10 +8,12 @@ public class LevelManager : Singleton<LevelManager>
 
     private Level level;
     private int levelIndex;
+    private Camera mainCamera;
 
     private void Awake()
     {
         levelIndex = PlayerPrefs.GetInt(PLAYER_PREFS_LEVEL, 1);
+        mainCamera = Camera.main;
     }
 
     public void NextLevel()
@@ -37,6 +39,7 @@ public class LevelManager : Singleton<LevelManager>
         }
 
         level = Instantiate(ResourceManager.Instance.LevelPrefabs[levelIndex - 1]);
+        mainCamera.backgroundColor = level.GetSkyColor();
     }
 
     public BotSpawner GetBotSpawner()

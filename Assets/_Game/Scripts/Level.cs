@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.AI.Navigation;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -11,22 +10,24 @@ public class Level : MonoBehaviour
     private NavMeshData navMeshData;
     [SerializeField]
     private BotSpawner botSpawner;
-
-    private NavMeshDataInstance navMeshDataInstance;
+    [SerializeField]
+    private Color skyColor;
 
     private void Awake()
     {
-        navMeshDataInstance = NavMesh.AddNavMeshData(navMeshData);
-    }
-
-    private void OnDestroy()
-    {
-        NavMesh.RemoveNavMeshData(navMeshDataInstance);
+        NavMesh.RemoveAllNavMeshData();
+        
+        NavMesh.AddNavMeshData(navMeshData);
     }
 
     public BotSpawner GetBotSpawner()
     {
         return botSpawner;
+    }
+
+    public Color GetSkyColor()
+    {
+        return skyColor;
     }
 
     public void Despawn()

@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64ab00e2ed2b606418194e0e58dbaa2a, type: 3}
   m_Name: DevilSkinSet
   m_EditorClassIdentifier: 
-  Name: Devil_Set
-  Cost: 1
+  Name: Devil Set
+  Cost: 75
   Sprite: {fileID: 21300000, guid: 591bf6bd34c3a3c4e9143ba55a6c7d7b, type: 3}
   BodyMaterial: {fileID: 2100000, guid: 2f8b07ac81db57a41b8f6d6d2c27d5c2, type: 2}
   PantMaterial: {fileID: 2100000, guid: 7e72740b26e3e984a9adf843f3eececc, type: 2}

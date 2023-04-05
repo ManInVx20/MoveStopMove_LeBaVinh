@@ -21,10 +21,12 @@ public class ResourceManager : Singleton<ResourceManager>
 
     private const string PLAYER_PREFS_GOLD = "Gold";
     private const string PLAYER_PREFS_SKIN_SET = "SkinSet";
+    private const string PLAYER_PREFS_WEAPON = "Weapon";
 
     private List<ObjectColorSO> remainingObjectColorList;
     private int goldAmount;
     private string skinSetSelected;
+    private string weaponSelected;
 
     private void Awake()
     {
@@ -35,6 +37,7 @@ public class ResourceManager : Singleton<ResourceManager>
 
         goldAmount = PlayerPrefs.GetInt(PLAYER_PREFS_GOLD, 0);
         skinSetSelected = PlayerPrefs.GetString(PLAYER_PREFS_SKIN_SET);
+        weaponSelected = PlayerPrefs.GetString (PLAYER_PREFS_WEAPON);
     }
 
     private void Start()
@@ -42,6 +45,16 @@ public class ResourceManager : Singleton<ResourceManager>
         OnGoldAmountChanged?.Invoke(this, EventArgs.Empty);
 
         Bot.OnAnyBotDeath += Bot_OnAnyBotDeath;
+
+        if (string.IsNullOrEmpty(weaponSelected) && WeaponListSO.WeaponSOList.Count > 0)
+        {
+            WeaponSO weaponSO = WeaponListSO.WeaponSOList[0];
+
+            if (TryBuyWeapon(weaponSO))
+            {
+                ChangeWeapon(weaponSO);
+            }
+        }
     }
 
     public void ResetRemainingColorList()
@@ -98,6 +111,13 @@ public class ResourceManager : Singleton<ResourceManager>
         PlayerPrefs.SetInt(PLAYER_PREFS_GOLD, goldAmount);
     }
 
+    public SkinSetSO GetRandomSkinSetSO()
+    {
+        int randomIndex = UnityEngine.Random.Range(0, SkinSetListSO.SkinSetSOList.Count);
+
+        return SkinSetListSO.SkinSetSOList[randomIndex];
+    }
+
     public SkinSetSO GetSelectedSkinSetSO()
     {
         for (int i = 0; i < SkinSetListSO.SkinSetSOList.Count; i++)
@@ -142,6 +162,52 @@ public class ResourceManager : Singleton<ResourceManager>
         PlayerPrefs.SetString(PLAYER_PREFS_SKIN_SET, skinSetSelected);
 
         Player.Instance.UpdateSkinSetSO(skinSetSO);
+    }
+
+    public WeaponSO GetSelectedWeaponSO()
+    {
+        for (int i = 0; i < WeaponListSO.WeaponSOList.Count; i++)
+        {
+            if (WeaponListSO.WeaponSOList[i].Name.Equals(weaponSelected))
+            {
+                return WeaponListSO.WeaponSOList[i];
+            }
+        }
+
+        return null;
+    }
+
+    public bool IsWeaponUnlocked(WeaponSO weaponSO)
+    {
+        return PlayerPrefs.GetInt(weaponSO.Name, 0) != 0;
+    }
+
+    public bool IsWeaponSelected(WeaponSO weaponSO)
+    {
+        return !string.IsNullOrEmpty(weaponSelected) && weaponSelected.Equals(weaponSO.Name);
+    }
+
+    public bool TryBuyWeapon(WeaponSO weaponSO)
+    {
+        if (goldAmount < weaponSO.Cost)
+        {
+            return false;
+        }
+
+        ReduceGoldAmount(weaponSO.Cost);
+
+        PlayerPrefs.SetInt(weaponSO.Name, 1);
+
+        return true;
+    }
+
+    public void ChangeWeapon(WeaponSO weaponSO)
+    {
+        weaponSelected = weaponSO?.Name;
+
+        PlayerPrefs.SetString(PLAYER_PREFS_WEAPON, weaponSelected);
+
+        Player.Instance.UpdateWeaponSO(weaponSO);
     }
 
     private void Bot_OnAnyBotDeath(object sender, System.EventArgs args)

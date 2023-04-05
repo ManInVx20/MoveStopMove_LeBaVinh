@@ -15,7 +15,9 @@ public class SkinShopCanvas : UICanvas
     {
         closeButton.onClick.AddListener(() =>
         {
-            GameManager.Instance.CloseShop();
+            SoundManager.Instance.PlayButtonClickSound();
+
+            GameManager.Instance.CloseSkinShop();
         });
     }
 

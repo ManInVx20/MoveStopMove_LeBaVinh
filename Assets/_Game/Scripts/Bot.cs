@@ -152,6 +152,28 @@ public class Bot : Character
         OnAnyBotDespawned?.Invoke(this, EventArgs.Empty);
     }
 
+    protected override void GetObjectColorSO(out ObjectColorSO objectColorSO)
+    {
+        objectColorSO = ResourceManager.Instance.GetRandomObjectColorSO();
+    }
+
+    protected override void GetSkinSetSO(out SkinSetSO skinSetSO)
+    {
+        if (UnityEngine.Random.Range(0, 3) > 0)
+        {
+            skinSetSO = null;
+        }
+        else
+        {
+            skinSetSO = ResourceManager.Instance.GetRandomSkinSetSO();
+        }
+    }
+
+    protected override void GetWeaponSO(out WeaponSO weaponSO)
+    {
+        weaponSO = ResourceManager.Instance.GetRandomWeaponSO();
+    }
+
     private void DespawnTargetIndicatorUI()
     {
         if (targetIndicatorUI != null)

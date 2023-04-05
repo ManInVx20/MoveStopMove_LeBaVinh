@@ -85,14 +85,27 @@ public class AttackRange : MonoBehaviour
     {
         characterInRangeList.RemoveAll(character => character.IsDead());
 
-        if (characterInRangeList.Count > 0)
+        Character target = null;
+        
+        for (int i = 0; i < characterInRangeList.Count; i++)
         {
-            character.SetTarget(characterInRangeList[0]);
+            if (target == null || Vector3.Distance(character.transform.position, characterInRangeList[i].transform.position) 
+                < Vector3.Distance(character.transform.position, target.transform.position))
+            {
+                target = characterInRangeList[i];
+            }
         }
-        else
-        {
-            character.SetTarget(null);
-        }
+
+        character.SetTarget(target);
+
+        //if (characterInRangeList.Count > 0)
+        //{
+        //    character.SetTarget(characterInRangeList[0]);
+        //}
+        //else
+        //{
+        //    character.SetTarget(null);
+        //}
     }
 
     private void Show()
