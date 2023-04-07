@@ -55,7 +55,8 @@ public class BotSpawner : MonoBehaviour
     {
         List<Transform> safeSpawnPointList = GetSafeSpawnPointList();
 
-        int maxIndex = firstWave ? firstSpawnCount : Mathf.Min(botDespawnedCountPerInterval, safeSpawnPointList.Count);
+        int maxIndex = firstWave ? firstSpawnCount : Mathf.Min(botDespawnedCountPerInterval, botRemainingCount);
+        maxIndex = Mathf.Min(maxIndex, safeSpawnPointList.Count);
         for (int i = 0; i < maxIndex; i++)
         {
             if (botSpawnedCount == botMaxCount)
