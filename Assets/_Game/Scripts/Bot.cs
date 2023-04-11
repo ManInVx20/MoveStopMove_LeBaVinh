@@ -109,7 +109,7 @@ public class Bot : Character
         targetIndicatorUI = ResourceManager.Instance.TargetIndicatorUIPool.GetPrefabInstance();
         targetIndicatorUI.Initialize(this, GetNormalColor());
 
-        SetName(this.GetType().ToString());
+        SetName(ResourceManager.Instance.GetRandomName());
 
         int playerLevel = Player.Instance.GetLevel();
         int minLevel, maxLevel;

@@ -49,7 +49,7 @@ public class MainMenuCanvas : UICanvas
 
         playerNameInputField.onEndEdit.AddListener((value) =>
         {
-            string name = !string.IsNullOrEmpty(value) ? value : "Player";
+            string name = !string.IsNullOrEmpty(value) ? value : Player.PLAYER_NAME_DEFAULT;
 
             Player.Instance.SetPlayerName(name);
 

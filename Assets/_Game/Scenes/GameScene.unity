@@ -244,6 +244,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <ObjectColorListSO>k__BackingField: {fileID: 11400000, guid: 7a43de6e55b21a742994955f8a481a5e, type: 2}
+  <NameListSO>k__BackingField: {fileID: 11400000, guid: 5c6bf51136df9d8439eaf8e4d373cd7b, type: 2}
   <WeaponListSO>k__BackingField: {fileID: 11400000, guid: f14dcaa2a54d4604890be95be201b812, type: 2}
   <SkinSetListSO>k__BackingField: {fileID: 11400000, guid: c21ed0015427fbd47ab21cd1345baa12, type: 2}
   <LevelPrefabs>k__BackingField:

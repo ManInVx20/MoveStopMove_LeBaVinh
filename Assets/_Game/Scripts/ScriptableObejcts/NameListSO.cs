@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 //[CreateAssetMenu]
-public class ObjectColorListSO : ScriptableObject
+public class NameListSO : ScriptableObject
 {
-    public List<ObjectColorSO> ObjectColorSOList;
+    public List<string> NameList;
 }

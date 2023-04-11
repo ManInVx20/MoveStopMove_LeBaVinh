@@ -48,7 +48,7 @@ public class GameManager : Singleton<GameManager>
     {
         if (!firstTime)
         {
-            ResourceManager.Instance.ResetRemainingColorList();
+            ResourceManager.Instance.ResetState();
 
             Player.Instance.ResetState();
         }

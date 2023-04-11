@@ -8,6 +8,8 @@ public class ResourceManager : Singleton<ResourceManager>
     [field: SerializeField]
     public ObjectColorListSO ObjectColorListSO { get; private set; }
     [field: SerializeField]
+    public NameListSO NameListSO { get; private set; }
+    [field: SerializeField]
     public WeaponListSO WeaponListSO { get; private set; }
     [field: SerializeField]
     public SkinSetListSO SkinSetListSO { get; private set; }
@@ -24,16 +26,18 @@ public class ResourceManager : Singleton<ResourceManager>
     private const string PLAYER_PREFS_WEAPON = "Weapon";
 
     private List<ObjectColorSO> remainingObjectColorList;
+    private List<string> remainingNameListSO;
     private int goldAmount;
     private string skinSetSelected;
     private string weaponSelected;
 
     private void Awake()
     {
-        ResetRemainingColorList();
-
         CharacterInfoUIPool = GetComponent<CharacterInfoUIPool>();
         TargetIndicatorUIPool = GetComponent<TargetIndicatorUIPool>();
+
+        ResetRemainingColorList();
+        ResetRemainingNameList();
 
         goldAmount = PlayerPrefs.GetInt(PLAYER_PREFS_GOLD, 0);
         skinSetSelected = PlayerPrefs.GetString(PLAYER_PREFS_SKIN_SET);
@@ -57,9 +61,10 @@ public class ResourceManager : Singleton<ResourceManager>
         }
     }
 
-    public void ResetRemainingColorList()
+    public void ResetState()
     {
-        remainingObjectColorList = new List<ObjectColorSO>(ObjectColorListSO.ObjectColorSOList);
+        ResetRemainingColorList();
+        ResetRemainingNameList();
     }
 
     public ObjectColorSO GetFirstUnusedObjectColorSO()
@@ -79,6 +84,16 @@ public class ResourceManager : Singleton<ResourceManager>
         remainingObjectColorList.RemoveAt(randomIndex);
 
         return objectColorSO;
+    }
+
+    public string GetRandomName()
+    {
+        int randomIndex = UnityEngine.Random.Range(0, remainingObjectColorList.Count);
+        string name = remainingNameListSO[randomIndex];
+
+        remainingNameListSO.RemoveAt(randomIndex);
+
+        return name;
     }
 
     public WeaponSO GetRandomWeaponSO()
@@ -210,10 +225,21 @@ public class ResourceManager : Singleton<ResourceManager>
         Player.Instance.UpdateWeaponSO(weaponSO);
     }
 
+    private void ResetRemainingColorList()
+    {
+        remainingObjectColorList = new List<ObjectColorSO>(ObjectColorListSO.ObjectColorSOList);
+    }
+
+    private void ResetRemainingNameList()
+    {
+        remainingNameListSO = new List<string>(NameListSO.NameList);
+    }
+
     private void Bot_OnAnyBotDeath(object sender, System.EventArgs args)
     {
         Bot bot = sender as Bot;
 
         remainingObjectColorList.Add(bot.GetObjectColorSO());
+        remainingNameListSO.Add(bot.GetName());
     }
 }

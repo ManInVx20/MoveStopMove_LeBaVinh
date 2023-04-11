@@ -9,6 +9,8 @@ public class Player : Character
 {
     public static Player Instance { get; private set; }
 
+    public const string PLAYER_NAME_DEFAULT = "You";
+
     public Character Killer { get; private set; }
     public int Rank { get; private set; }
     public int Gold { get; private set; }
@@ -82,7 +84,7 @@ public class Player : Character
         GetAgent().Warp(Vector3.zero);
         transform.localRotation = Quaternion.identity;
 
-        SetPlayerName(PlayerPrefs.GetString(PLAYER_PREFS_PLAYER_NAME, this.GetType().ToString()));
+        SetPlayerName(PlayerPrefs.GetString(PLAYER_PREFS_PLAYER_NAME, PLAYER_NAME_DEFAULT));
         SetLevel(1);
 
         Killer = null;
