@@ -6,13 +6,22 @@ using UnityEngine.UI;
 
 public class SkinShopCanvas : UICanvas
 {
-    [SerializeField]
-    private TextMeshProUGUI goldText;
+    private const string UI_OPEN = "Open";
+    private const string UI_CLOSE = "Close";
+
     [SerializeField]
     private Button closeButton;
 
+    private Canvas canvas;
+    private Animator animator;
+
     private void Awake()
     {
+        canvas = GetComponent<Canvas>();
+        canvas.worldCamera = Utilities.GetCameraWithName("UICamera");
+
+        animator = GetComponent<Animator>();
+
         closeButton.onClick.AddListener(() =>
         {
             SoundManager.Instance.PlayButtonClickSound();
@@ -21,20 +30,20 @@ public class SkinShopCanvas : UICanvas
         });
     }
 
-    private void Start()
+    public override void Open()
     {
-        ResourceManager.Instance.OnGoldAmountChanged += ResourceManager_OnGoldAmountChanged;
+        base.Open();
+
+        animator.SetTrigger(UI_OPEN);
     }
 
-    private void ResourceManager_OnGoldAmountChanged(object sender, System.EventArgs args)
+    public override void CloseDirectly()
     {
-        goldText.text = ResourceManager.Instance.GetGoldAmount().ToString();
-    }
+        animator.SetTrigger(UI_CLOSE);
 
-    public override void Setup()
-    {
-        base.Setup();
-
-        goldText.text = ResourceManager.Instance.GetGoldAmount().ToString();
+        StartCoroutine(Utilities.DelayActionCoroutine(0.15f, () =>
+        {
+            base.CloseDirectly();
+        }));
     }
 }

@@ -258,7 +258,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterAnimator: {fileID: 2229561905581941517}
   characterVisual: {fileID: 2229561905523950494}
-  weaponHolder: {fileID: 1776582111135834638}
+  knifeWeaponHolder: {fileID: 1776582111135834638}
+  hammerWeaponHolder: {fileID: 698840725776187798}
+  boomerangWeaponHolder: {fileID: 4352400217053428843}
   throwPoint: {fileID: 2229561906932172937}
   sizeDelta: 0.025
   hitVFX: {fileID: 7273537501809049318}
@@ -529,6 +531,16 @@ MonoBehaviour:
 --- !u!4 &1776582111135834638 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 456920447098679424, guid: 95de931dec4047142a225102512485c5, type: 3}
+  m_PrefabInstance: {fileID: 2229561906396222094}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &698840725776187798 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1675965036843635480, guid: 95de931dec4047142a225102512485c5, type: 3}
+  m_PrefabInstance: {fileID: 2229561906396222094}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &4352400217053428843 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2492225976590675685, guid: 95de931dec4047142a225102512485c5, type: 3}
   m_PrefabInstance: {fileID: 2229561906396222094}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7475061047156400674

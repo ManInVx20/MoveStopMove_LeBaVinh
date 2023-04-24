@@ -61,7 +61,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.25, y: 1, z: 0.45}
+  m_Size: {x: 1, y: 0.25, z: 0.45}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8224719296227629643
 MonoBehaviour:
@@ -75,7 +75,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6445216cb212284fa5ec4f4ee472cd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 5.5
+  speed: 8
 --- !u!1 &1075637185942052391
 GameObject:
   m_ObjectHideFlags: 0
@@ -132,23 +132,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2354563567709478439, guid: daed2a2ce504bb54f999b1b2d685f80a, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 2354563567709478439, guid: daed2a2ce504bb54f999b1b2d685f80a, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.7071068
+      value: -0.5
       objectReference: {fileID: 0}
     - target: {fileID: 2354563567709478439, guid: daed2a2ce504bb54f999b1b2d685f80a, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 2354563567709478439, guid: daed2a2ce504bb54f999b1b2d685f80a, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.7071068
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 2354563567709478439, guid: daed2a2ce504bb54f999b1b2d685f80a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 180
+      value: -90
       objectReference: {fileID: 0}
     - target: {fileID: 2354563567709478439, guid: daed2a2ce504bb54f999b1b2d685f80a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y

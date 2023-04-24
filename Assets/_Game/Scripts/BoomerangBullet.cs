@@ -5,7 +5,7 @@ using UnityEngine;
 public class BoomerangBullet : Bullet
 {
     private float returnTimer;
-    private float returnTime = 1.25f;
+    private float returnTime = 0.8f;
 
     public override void PrepareToUse()
     {
@@ -18,7 +18,7 @@ public class BoomerangBullet : Bullet
     {
         base.Execute();
 
-        transform.Rotate(Vector3.up * -360.0f * Time.deltaTime);
+        transform.Rotate(Vector3.up * -720.0f * Time.deltaTime);
 
         returnTimer += Time.deltaTime;
         if (returnTimer >= returnTime)

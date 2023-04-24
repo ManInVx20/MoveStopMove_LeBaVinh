@@ -21,7 +21,11 @@ public class Character : PoolableObject
     [SerializeField]
     private CharacterVisual characterVisual;
     [SerializeField]
-    private Transform weaponHolder;
+    private Transform knifeWeaponHolder;
+    [SerializeField]
+    private Transform hammerWeaponHolder;
+    [SerializeField]
+    private Transform boomerangWeaponHolder;
     [SerializeField]
     private Transform throwPoint;
     [SerializeField]
@@ -37,7 +41,10 @@ public class Character : PoolableObject
     private WeaponSO weaponSO;
     private Weapon weapon;
     private Character target;
-    private SkinSetSO skinSetSO;
+    private SkinSO hatSkinSO;
+    private SkinSO pantSkinSO;
+    private SkinSO shieldSkinSO;
+    private SkinSO fullSetSkinSO;
     private bool isDead;
     private bool attacked;
     private bool despawned;
@@ -188,20 +195,44 @@ public class Character : PoolableObject
         weapon = null;
     }
 
-    public void UpdateSkinSetSO(SkinSetSO skinSetSO)
+    public void UpdateSkinSO(SkinSO hatSkinSO, SkinSO pantSkinSO, SkinSO shieldSkinSO, SkinSO fullSetSkinSO, bool pernament = true)
     {
-        characterVisual.ResetSkinSet();
+        characterVisual.ResetSkin();
 
         if (objectColorSO != null)
         {
             characterVisual.SetBodyMaterial(objectColorSO.NormalMaterial);
         }
 
-        this.skinSetSO = skinSetSO;
-
-        if (skinSetSO != null)
+        if (pernament)
         {
-            characterVisual.SetSkinSet(skinSetSO);
+            if (hatSkinSO != null)
+            {
+                this.hatSkinSO = hatSkinSO;
+            }
+            if (pantSkinSO != null)
+            {
+                this.pantSkinSO = pantSkinSO;
+            }
+            if (shieldSkinSO != null)
+            {
+                this.shieldSkinSO = shieldSkinSO;
+            }
+            if (fullSetSkinSO != null)
+            {
+                this.fullSetSkinSO = fullSetSkinSO;
+            }
+        }
+
+        if (fullSetSkinSO != null)
+        {
+            characterVisual.SetSet(fullSetSkinSO);
+        }
+        else
+        {
+            characterVisual.SetHat(hatSkinSO);
+            characterVisual.SetPant(pantSkinSO);
+            characterVisual.SetShield(shieldSkinSO);
         }
     }
 
@@ -211,8 +242,7 @@ public class Character : PoolableObject
 
         this.weaponSO = weaponSO;
 
-        GameObject weaponGameObject = Instantiate(this.weaponSO.Prefab, weaponHolder);
-        weapon = weaponGameObject.GetComponent<Weapon>();
+        SpawnWeapon();
     }
 
     public virtual void Victory()
@@ -237,6 +267,8 @@ public class Character : PoolableObject
 
         RotateToTarget();
 
+        weapon.PrepareToFire();
+
         ChangeAnim(CharacterAnimator.Anim.Attack);
     }
 
@@ -258,7 +290,7 @@ public class Character : PoolableObject
         agent.enabled = false;
         despawnTimer = 0.0f;
 
-        if (objectColorSO != null && skinSetSO == null)
+        if (objectColorSO != null && fullSetSkinSO == null)
         {
             characterVisual.SetBodyMaterial(objectColorSO.DeathMaterial);
         }
@@ -290,7 +322,7 @@ public class Character : PoolableObject
         ResetAttack();
 
         GetObjectColorSO(out objectColorSO);
-        GetSkinSetSO(out skinSetSO);
+        GetSkinSO(out hatSkinSO, out pantSkinSO, out shieldSkinSO, out fullSetSkinSO);
         GetWeaponSO(out weaponSO);
 
         if (objectColorSO != null)
@@ -298,12 +330,11 @@ public class Character : PoolableObject
             characterVisual.SetBodyMaterial(objectColorSO.NormalMaterial);
         }
 
-        UpdateSkinSetSO(skinSetSO);
+        UpdateSkinSO(hatSkinSO, pantSkinSO, shieldSkinSO, fullSetSkinSO);
 
         if (weaponSO != null && weapon == null)
         {
-            GameObject weaponGameObject = Instantiate(weaponSO.Prefab, weaponHolder);
-            weapon = weaponGameObject.GetComponent<Weapon>();
+            SpawnWeapon();
         }
 
         ParticleSystem.MainModule mainModule = hitVFX.main;
@@ -347,9 +378,12 @@ public class Character : PoolableObject
         objectColorSO = null;
     }
 
-    protected virtual void GetSkinSetSO(out SkinSetSO skinSetSO)
+    protected virtual void GetSkinSO(out SkinSO hatSkinSO, out SkinSO pantSkinSO, out SkinSO shieldSkinSO, out SkinSO fullSetSkinSO)
     {
-        skinSetSO = null;
+        hatSkinSO = null;
+        pantSkinSO = null;
+        shieldSkinSO = null;
+        fullSetSkinSO = null;
     }
 
     protected virtual void GetWeaponSO(out WeaponSO weaponSO)
@@ -361,5 +395,28 @@ public class Character : PoolableObject
     {
         multiplier = 1.0f + sizeDelta * (charLevel - 1);
         transform.localScale = Vector3.one * multiplier;
+    }
+
+    private void SpawnWeapon()
+    {
+        GameObject weaponGameObject;
+
+        switch (weaponSO.WeaponType)
+        {
+            case WeaponType.Knife:
+                weaponGameObject = Instantiate(weaponSO.Prefab, knifeWeaponHolder);
+                break;
+            case WeaponType.Hammer:
+                weaponGameObject = Instantiate(weaponSO.Prefab, hammerWeaponHolder);
+                break;
+            case WeaponType.Boomerang:
+                weaponGameObject = Instantiate(weaponSO.Prefab, boomerangWeaponHolder);
+                break;
+            default:
+                weaponGameObject = new GameObject();
+                break;
+        }
+
+        weapon = weaponGameObject.GetComponent<Weapon>();
     }
 }

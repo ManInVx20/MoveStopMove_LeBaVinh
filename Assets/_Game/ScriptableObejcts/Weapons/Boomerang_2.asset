@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d70975963b0be9b49ad744933ce38de8, type: 3}
   m_Name: Boomerang_2
   m_EditorClassIdentifier: 
+  WeaponType: 2
   Name: Boomerang 2
   Cost: 150
   Sprite: {fileID: 0}

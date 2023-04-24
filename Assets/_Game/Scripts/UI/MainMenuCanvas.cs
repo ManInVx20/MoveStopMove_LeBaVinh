@@ -6,6 +6,9 @@ using UnityEngine.UI;
 
 public class MainMenuCanvas : UICanvas
 {
+    private const string UI_OPEN = "Open";
+    private const string UI_CLOSE = "Close";
+
     [SerializeField]
     private ButtonToggle soundButtonToggle;
     [SerializeField]
@@ -17,14 +20,16 @@ public class MainMenuCanvas : UICanvas
     [SerializeField]
     private Button playButton;
     [SerializeField]
-    private TextMeshProUGUI goldText;
-    [SerializeField]
     private TextMeshProUGUI zoneText;
     [SerializeField]
     private TMP_InputField playerNameInputField;
 
+    private Animator animator;
+
     private void Awake()
     {
+        animator = GetComponent<Animator>();
+
         soundButtonToggle.OnValueChanged += SoundButtonToggle_OnValueChanged;
         vibrationButtonToggle.OnValueChanged += VibrationButtonToggle_OnValueChanged;
 
@@ -71,11 +76,27 @@ public class MainMenuCanvas : UICanvas
     {
         base.Setup();
 
-        goldText.text = ResourceManager.Instance.GetGoldAmount().ToString();
-        zoneText.text = $"Zone: {LevelManager.Instance.GetLevelIndex()}";
-        playerNameInputField.text = Player.Instance.GetName();
+        zoneText.text = $"Zone: {LevelManager.Instance.GetCurrentLevel()}";
+        playerNameInputField.text = GameDataManager.Instance.GetGameData().PlayerName;
 
         soundButtonToggle.OnSwitchToggle(SoundManager.Instance.GetSound());
         vibrationButtonToggle.OnSwitchToggle(SoundManager.Instance.GetVibration());
+    }
+
+    public override void Open()
+    {
+        base.Open();
+
+        animator.SetTrigger(UI_OPEN);
+    }
+
+    public override void CloseDirectly()
+    {
+        animator.SetTrigger(UI_CLOSE);
+
+        StartCoroutine(Utilities.DelayActionCoroutine(0.15f, () =>
+        {
+            base.CloseDirectly();
+        }));
     }
 }

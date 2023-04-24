@@ -29,12 +29,12 @@ public class AttackRange : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.TryGetComponent<Obstacle>(out Obstacle obstacle) && this.character is Player)
+        if (Cache.TryGetObstacle(other, out Obstacle obstacle) && this.character is Player)
         {
             obstacle.SetTrasparent();
         }
 
-        if (other.TryGetComponent<Character>(out Character character))
+        if (Cache.TryGetCharacter(other, out Character character))
         {
             if (character != this.character && !character.IsDead() && !characterInRangeList.Contains(character))
             {
@@ -50,12 +50,12 @@ public class AttackRange : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.TryGetComponent<Obstacle>(out Obstacle obstacle) && this.character is Player)
+        if (Cache.TryGetObstacle(other, out Obstacle obstacle) && this.character is Player)
         {
             obstacle.SetNormal();
         }
 
-        if (other.TryGetComponent<Character>(out Character character))
+        if (Cache.TryGetCharacter(other, out Character character))
         {
             if (character != this.character && !character.IsDead() && characterInRangeList.Contains(character))
             {
@@ -86,10 +86,10 @@ public class AttackRange : MonoBehaviour
         characterInRangeList.RemoveAll(character => character.IsDead());
 
         Character target = null;
-        
+
         for (int i = 0; i < characterInRangeList.Count; i++)
         {
-            if (target == null || Vector3.Distance(character.transform.position, characterInRangeList[i].transform.position) 
+            if (target == null || Vector3.Distance(character.transform.position, characterInRangeList[i].transform.position)
                 < Vector3.Distance(character.transform.position, target.transform.position))
             {
                 target = characterInRangeList[i];

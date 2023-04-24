@@ -12,7 +12,7 @@ public static class TransformExtensions
         {
             for (int i = transform.childCount - 1; i >= 0; i--)
             {
-                transform.GetChild(i).SetLayer(layer);
+                transform.GetChild(i).SetLayer(layer, true);
             }
         }
     }

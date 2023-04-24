@@ -4,31 +4,33 @@ using UnityEngine;
 
 public class LevelManager : Singleton<LevelManager>
 {
-    private const string PLAYER_PREFS_LEVEL = "Level";
-
     private Level level;
     private int levelIndex;
     private Camera mainCamera;
 
     private void Awake()
     {
-        levelIndex = PlayerPrefs.GetInt(PLAYER_PREFS_LEVEL, 1);
         mainCamera = Camera.main;
+    }
+
+    private void Start()
+    {
+        levelIndex = GameDataManager.Instance.GetGameData().LevelIndex;
     }
 
     public void NextLevel()
     {
-        if (levelIndex + 1 <= ResourceManager.Instance.LevelPrefabs.Length)
+        if (levelIndex < ResourceManager.Instance.LevelPrefabs.Length)
         {
-            levelIndex += 1;
+            GameDataManager.Instance.GetGameData().LevelIndex += 1;
 
-            PlayerPrefs.SetInt(PLAYER_PREFS_LEVEL, levelIndex);
+            GameDataManager.Instance.WriteFile();
         }
     }
 
-    public int GetLevelIndex()
+    public int GetCurrentLevel()
     {
-        return levelIndex;
+        return levelIndex + 1;
     }
 
     public void LoadLevel()
@@ -38,7 +40,7 @@ public class LevelManager : Singleton<LevelManager>
             level.Despawn();
         }
 
-        level = Instantiate(ResourceManager.Instance.LevelPrefabs[levelIndex - 1]);
+        level = Instantiate(ResourceManager.Instance.LevelPrefabs[levelIndex]);
         mainCamera.backgroundColor = level.GetSkyColor();
     }
 

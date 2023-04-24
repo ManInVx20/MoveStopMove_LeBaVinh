@@ -9,7 +9,6 @@ public class Bullet : PoolableObject
 
     private Character owner;
     private Rigidbody rb;
-    private Transform oldParent;
     private Vector3 direction;
     private float speedMultiplier;
 
@@ -25,7 +24,7 @@ public class Bullet : PoolableObject
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.TryGetComponent<Character>(out Character character))
+        if (Cache.TryGetCharacter(other, out Character character))
         {
             if (character != owner)
             {
@@ -42,7 +41,7 @@ public class Bullet : PoolableObject
             }
         }
 
-        if (other.TryGetComponent<Obstacle>(out Obstacle obstacle))
+        if (Cache.TryGetObstacle(other, out _))
         {
             Despawn();
         }

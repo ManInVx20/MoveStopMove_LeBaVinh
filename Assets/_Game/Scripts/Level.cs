@@ -13,11 +13,18 @@ public class Level : MonoBehaviour
     [SerializeField]
     private Color skyColor;
 
+    private NavMeshDataInstance navMeshDataInstance;
+
     private void Awake()
     {
         NavMesh.RemoveAllNavMeshData();
-        
-        NavMesh.AddNavMeshData(navMeshData);
+
+        navMeshDataInstance = NavMesh.AddNavMeshData(navMeshData);
+    }
+
+    private void OnDestroy()
+    {
+        NavMesh.RemoveNavMeshData(navMeshDataInstance);
     }
 
     public BotSpawner GetBotSpawner()
@@ -33,6 +40,8 @@ public class Level : MonoBehaviour
     public void Despawn()
     {
         botSpawner.Despawn();
+
+        NavMesh.RemoveNavMeshData(navMeshDataInstance);
 
         Destroy(gameObject);
     }

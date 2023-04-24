@@ -17,7 +17,7 @@ public class PatrolState : IState
 
         timer = 0.0f;
         time = Random.Range(2.0f, 4.0f);
-        attackTime = Random.Range(time * 0.3f, time * 0.7f);
+        attackTime = Random.Range(time * 0.25f, time * 0.75f);
         direction = Utilities.GetRandomHorizontalDirection();
     }
 

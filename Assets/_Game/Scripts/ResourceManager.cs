@@ -12,24 +12,19 @@ public class ResourceManager : Singleton<ResourceManager>
     [field: SerializeField]
     public WeaponListSO WeaponListSO { get; private set; }
     [field: SerializeField]
-    public SkinSetListSO SkinSetListSO { get; private set; }
+    public SkinListSO SkinListSO { get; private set; }
     [field: SerializeField]
     public Level[] LevelPrefabs { get; private set; }
+    [field: SerializeField]
+    public GameObject PantPrefab { get; private set; }
 
     public event EventHandler OnGoldAmountChanged;
 
     public CharacterInfoUIPool CharacterInfoUIPool { get; private set; }
     public TargetIndicatorUIPool TargetIndicatorUIPool { get; private set; }
 
-    private const string PLAYER_PREFS_GOLD = "Gold";
-    private const string PLAYER_PREFS_SKIN_SET = "SkinSet";
-    private const string PLAYER_PREFS_WEAPON = "Weapon";
-
     private List<ObjectColorSO> remainingObjectColorList;
     private List<string> remainingNameListSO;
-    private int goldAmount;
-    private string skinSetSelected;
-    private string weaponSelected;
 
     private void Awake()
     {
@@ -38,10 +33,6 @@ public class ResourceManager : Singleton<ResourceManager>
 
         ResetRemainingColorList();
         ResetRemainingNameList();
-
-        goldAmount = PlayerPrefs.GetInt(PLAYER_PREFS_GOLD, 0);
-        skinSetSelected = PlayerPrefs.GetString(PLAYER_PREFS_SKIN_SET);
-        weaponSelected = PlayerPrefs.GetString (PLAYER_PREFS_WEAPON);
     }
 
     private void Start()
@@ -50,7 +41,7 @@ public class ResourceManager : Singleton<ResourceManager>
 
         Bot.OnAnyBotDeath += Bot_OnAnyBotDeath;
 
-        if (string.IsNullOrEmpty(weaponSelected) && WeaponListSO.WeaponSOList.Count > 0)
+        if (GameDataManager.Instance.GetGameData().WeaponSO == null && WeaponListSO.WeaponSOList.Count > 0)
         {
             WeaponSO weaponSO = WeaponListSO.WeaponSOList[0];
 
@@ -96,6 +87,107 @@ public class ResourceManager : Singleton<ResourceManager>
         return name;
     }
 
+    public int GetGoldAmount()
+    {
+        return GameDataManager.Instance.GetGameData().GoldAmount;
+    }
+
+    public void IncreaseGoldAmount(int value)
+    {
+        GameDataManager.Instance.GetGameData().GoldAmount += value;
+
+        OnGoldAmountChanged?.Invoke(this, EventArgs.Empty);
+
+        GameDataManager.Instance.WriteFile();
+    }
+
+    public void ReduceGoldAmount(int value)
+    {
+        GameDataManager.Instance.GetGameData().GoldAmount -= value;
+
+        OnGoldAmountChanged?.Invoke(this, EventArgs.Empty);
+
+        GameDataManager.Instance.WriteFile();
+    }
+
+    public List<SkinSO> GetSkinSOListBySkinType(SkinType skinType)
+    {
+        switch (skinType)
+        {
+            case SkinType.Hat:
+                return SkinListSO.HatSkinSOList;
+            case SkinType.Pant:
+                return SkinListSO.PantSkinSOList;
+            case SkinType.Accessary:
+                return SkinListSO.AccessarySkinSOList;
+            case SkinType.FullSet:
+                return SkinListSO.SetSkinSOList;
+            default:
+                return null;
+        }
+    }
+
+    public SkinSO GetRandomSkinSOBySkinType(SkinType skinType)
+    {
+        List<SkinSO> skinSOList = GetSkinSOListBySkinType(skinType);
+
+        int randomIndex = UnityEngine.Random.Range(0, skinSOList.Count);
+
+        return skinSOList[randomIndex];
+    }
+
+    public bool IsSkinUnlocked(SkinSO skinSO)
+    {
+        return GameDataManager.Instance.GetGameData().UnlockedSkinSOList.Contains(skinSO);
+    }
+
+    public bool IsSkinSelected(SkinSO skinSO)
+    {
+        return skinSO == GameDataManager.Instance.GetGameData().HatSkinSO ||
+            skinSO == GameDataManager.Instance.GetGameData().PantSkinSO ||
+            skinSO == GameDataManager.Instance.GetGameData().ShieldSkinSO ||
+            skinSO == GameDataManager.Instance.GetGameData().FullSetSkinSO;
+    }
+
+    public bool TryBuySkin(SkinSO skinSO)
+    {
+        if (GameDataManager.Instance.GetGameData().GoldAmount < skinSO.Cost)
+        {
+            return false;
+        }
+
+        ReduceGoldAmount(skinSO.Cost);
+
+        GameDataManager.Instance.GetGameData().UnlockedSkinSOList.Add(skinSO);
+
+        GameDataManager.Instance.WriteFile();
+
+        return true;
+    }
+
+    public void TrySkin(SkinSO skinSO)
+    {
+        Player.Instance.SetPlayerSkin(skinSO, false);
+    }
+
+    public void SelectSkin(SkinSO skinSO)
+    {
+        GameDataManager.Instance.GetGameData().SetSkinSOBySkinType(skinSO.SkinType, skinSO);
+
+        GameDataManager.Instance.WriteFile();
+
+        Player.Instance.SetPlayerSkin(skinSO);
+    }
+
+    public void UnselectSkin(SkinSO skinSO)
+    {
+        GameDataManager.Instance.GetGameData().SetSkinSOBySkinType(skinSO.SkinType, null);
+
+        GameDataManager.Instance.WriteFile();
+
+        Player.Instance.SetPlayerSkin(null);
+    }
+
     public WeaponSO GetRandomWeaponSO()
     {
         int randomIndex = UnityEngine.Random.Range(0, WeaponListSO.WeaponSOList.Count);
@@ -103,124 +195,37 @@ public class ResourceManager : Singleton<ResourceManager>
         return WeaponListSO.WeaponSOList[randomIndex];
     }
 
-    public int GetGoldAmount()
-    {
-        return goldAmount;
-    }
-
-    public void IncreaseGoldAmount(int value)
-    {
-        goldAmount += value;
-
-        OnGoldAmountChanged?.Invoke(this, EventArgs.Empty);
-
-        PlayerPrefs.SetInt(PLAYER_PREFS_GOLD, goldAmount);
-    }
-
-    public void ReduceGoldAmount(int value)
-    {
-        goldAmount -= value;
-
-        OnGoldAmountChanged?.Invoke(this, EventArgs.Empty);
-
-        PlayerPrefs.SetInt(PLAYER_PREFS_GOLD, goldAmount);
-    }
-
-    public SkinSetSO GetRandomSkinSetSO()
-    {
-        int randomIndex = UnityEngine.Random.Range(0, SkinSetListSO.SkinSetSOList.Count);
-
-        return SkinSetListSO.SkinSetSOList[randomIndex];
-    }
-
-    public SkinSetSO GetSelectedSkinSetSO()
-    {
-        for (int i = 0; i < SkinSetListSO.SkinSetSOList.Count; i++)
-        {
-            if (SkinSetListSO.SkinSetSOList[i].Name.Equals(skinSetSelected))
-            {
-                return SkinSetListSO.SkinSetSOList[i];
-            }
-        }
-
-        return null;
-    }
-
-    public bool IsSkinSetUnlocked(SkinSetSO skinSetSO)
-    {
-        return PlayerPrefs.GetInt(skinSetSO.Name, 0) != 0;
-    }
-
-    public bool IsSkinSetSelected(SkinSetSO skinSetSO)
-    {
-        return !string.IsNullOrEmpty(skinSetSelected) && skinSetSelected.Equals(skinSetSO.Name);
-    }
-
-    public bool TryBuySkinSet(SkinSetSO skinSetSO)
-    {
-        if (goldAmount < skinSetSO.Cost)
-        {
-            return false;
-        }
-
-        ReduceGoldAmount(skinSetSO.Cost);
-
-        PlayerPrefs.SetInt(skinSetSO.Name, 1);
-
-        return true;
-    }
-
-    public void ChangeSkinSet(SkinSetSO skinSetSO)
-    {
-        skinSetSelected = skinSetSO?.Name;
-
-        PlayerPrefs.SetString(PLAYER_PREFS_SKIN_SET, skinSetSelected);
-
-        Player.Instance.UpdateSkinSetSO(skinSetSO);
-    }
-
-    public WeaponSO GetSelectedWeaponSO()
-    {
-        for (int i = 0; i < WeaponListSO.WeaponSOList.Count; i++)
-        {
-            if (WeaponListSO.WeaponSOList[i].Name.Equals(weaponSelected))
-            {
-                return WeaponListSO.WeaponSOList[i];
-            }
-        }
-
-        return null;
-    }
-
     public bool IsWeaponUnlocked(WeaponSO weaponSO)
     {
-        return PlayerPrefs.GetInt(weaponSO.Name, 0) != 0;
+        return GameDataManager.Instance.GetGameData().UnlockedWeaponSOList.Contains(weaponSO);
     }
 
     public bool IsWeaponSelected(WeaponSO weaponSO)
     {
-        return !string.IsNullOrEmpty(weaponSelected) && weaponSelected.Equals(weaponSO.Name);
+        return weaponSO == GameDataManager.Instance.GetGameData().WeaponSO;
     }
 
     public bool TryBuyWeapon(WeaponSO weaponSO)
     {
-        if (goldAmount < weaponSO.Cost)
+        if (GameDataManager.Instance.GetGameData().GoldAmount < weaponSO.Cost)
         {
             return false;
         }
 
         ReduceGoldAmount(weaponSO.Cost);
 
-        PlayerPrefs.SetInt(weaponSO.Name, 1);
+        GameDataManager.Instance.GetGameData().UnlockedWeaponSOList.Add(weaponSO);
+
+        GameDataManager.Instance.WriteFile();
 
         return true;
     }
 
     public void ChangeWeapon(WeaponSO weaponSO)
     {
-        weaponSelected = weaponSO?.Name;
+        GameDataManager.Instance.GetGameData().WeaponSO = weaponSO;
 
-        PlayerPrefs.SetString(PLAYER_PREFS_WEAPON, weaponSelected);
+        GameDataManager.Instance.WriteFile();
 
         Player.Instance.UpdateWeaponSO(weaponSO);
     }
@@ -232,10 +237,20 @@ public class ResourceManager : Singleton<ResourceManager>
 
     private void ResetRemainingNameList()
     {
-        remainingNameListSO = new List<string>(NameListSO.NameList);
+        if (remainingNameListSO == null)
+        {
+            remainingNameListSO = new List<string>();
+        }
+
+        remainingNameListSO.Clear();
+
+        for (int i = 0; i < NameListSO.NameList.Count; i++)
+        {
+            remainingNameListSO.Add(string.Copy(NameListSO.NameList[i]));
+        }
     }
 
-    private void Bot_OnAnyBotDeath(object sender, System.EventArgs args)
+    private void Bot_OnAnyBotDeath(object sender, EventArgs args)
     {
         Bot bot = sender as Bot;
 

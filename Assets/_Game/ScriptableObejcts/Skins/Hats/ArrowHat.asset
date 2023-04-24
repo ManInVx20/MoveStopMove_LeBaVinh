@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64ab00e2ed2b606418194e0e58dbaa2a, type: 3}
+  m_Name: ArrowHat
+  m_EditorClassIdentifier: 
+  Name: Arrow Hat
+  Cost: 50
+  Sprite: {fileID: 21300000, guid: b3cbfcc1057f42648b97569c0f3442c3, type: 3}
+  BodyMaterial: {fileID: 0}
+  PantMaterial: {fileID: 0}
+  HatPrefab: {fileID: 5189494288517031714, guid: 6c1ee8df56dc5c14cb9b25ab5c312f3c, type: 3}
+  TopHatPrefab: {fileID: 0}
+  WingPrefab: {fileID: 0}
+  TailPrefab: {fileID: 0}
+  ShieldPrefab: {fileID: 0}

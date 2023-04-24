@@ -12,6 +12,8 @@ public class Bot : Character
     public event EventHandler OnBotEnteredPlayerAttackRange;
     public event EventHandler OnBotExitedPlayerAttackRange;
 
+    private const float MIN_MOVE_DISTANCE = 0.01f;
+
     private IState state;
     private TargetIndicatorUI targetIndicatorUI;
 
@@ -46,7 +48,7 @@ public class Bot : Character
 
     public void HandleMovement(Vector3 direction)
     {
-        if (direction != Vector3.zero)
+        if (direction.sqrMagnitude >= MIN_MOVE_DISTANCE)
         {
             Quaternion targetRotation = Quaternion.LookRotation(direction);
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, GetAgent().angularSpeed * Time.deltaTime);
@@ -60,7 +62,7 @@ public class Bot : Character
         Vector3 origin = transform.position + Vector3.up;
         if (Physics.SphereCast(origin, 1.0f, direction, out RaycastHit hit, 2.0f))
         {
-            if (hit.transform.TryGetComponent<Obstacle>(out _))
+            if (Cache.TryGetObstacle(hit.collider, out _))
             {
                 return true;
             }
@@ -157,15 +159,28 @@ public class Bot : Character
         objectColorSO = ResourceManager.Instance.GetRandomObjectColorSO();
     }
 
-    protected override void GetSkinSetSO(out SkinSetSO skinSetSO)
+    protected override void GetSkinSO(out SkinSO hatSkinSO, out SkinSO pantSkinSO, out SkinSO shieldSkinSO, out SkinSO fullSetSkinSO)
     {
+        base.GetSkinSO(out hatSkinSO, out pantSkinSO, out shieldSkinSO, out fullSetSkinSO);
+
         if (UnityEngine.Random.Range(0, 3) > 0)
         {
-            skinSetSO = null;
+            if (UnityEngine.Random.Range(0, 2) > 0)
+            {
+                hatSkinSO = ResourceManager.Instance.GetRandomSkinSOBySkinType(SkinType.Hat);
+            }
+            if (UnityEngine.Random.Range(0, 2) > 0)
+            {
+                pantSkinSO = ResourceManager.Instance.GetRandomSkinSOBySkinType(SkinType.Pant);
+            }
+            if (UnityEngine.Random.Range(0, 2) > 0)
+            {
+                shieldSkinSO = ResourceManager.Instance.GetRandomSkinSOBySkinType(SkinType.Accessary);
+            }
         }
         else
         {
-            skinSetSO = ResourceManager.Instance.GetRandomSkinSetSO();
+            fullSetSkinSO = ResourceManager.Instance.GetRandomSkinSOBySkinType(SkinType.FullSet);
         }
     }
 

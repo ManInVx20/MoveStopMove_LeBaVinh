@@ -5,9 +5,6 @@ using UnityEngine;
 
 public class SoundManager : Singleton<SoundManager>
 {
-    private const string PLAYER_PREFS_SOUND = "Sound";
-    private const string PLAYER_PREFS_VIBRATION = "Vibration";
-
     [SerializeField]
     private AudioClip buttonClickAudioClip;
     [SerializeField]
@@ -24,33 +21,29 @@ public class SoundManager : Singleton<SoundManager>
     private AudioClip victoryAudioClip;
 
     private Transform cameraTrasform;
-    private bool isVibrationOn;
-    private bool isSoundOn;
     private float soundVolumeMultiplier;
 
     private void Awake()
     {
         cameraTrasform = Camera.main.transform;
-        isVibrationOn = PlayerPrefs.GetInt(PLAYER_PREFS_VIBRATION, 1) != 0;
-        isSoundOn = PlayerPrefs.GetInt(PLAYER_PREFS_SOUND, 1) != 0;
     }
 
     private void Start()
     {
-        SetSound(isSoundOn);
-        SetVibration(isVibrationOn);
+        SetSound(GameDataManager.Instance.GetGameData().Sound);
+        SetVibration(GameDataManager.Instance.GetGameData().Vibration);
     }
 
     public bool GetSound()
     {
-        return isSoundOn;
+        return GameDataManager.Instance.GetGameData().Sound;
     }
 
     public void SetSound(bool value)
     {
-        isSoundOn = value;
+        GameDataManager.Instance.GetGameData().Sound = value;
 
-        if (isSoundOn)
+        if (GameDataManager.Instance.GetGameData().Sound)
         {
             soundVolumeMultiplier = 1.0f;
         }
@@ -59,19 +52,19 @@ public class SoundManager : Singleton<SoundManager>
             soundVolumeMultiplier = 0.0f;
         }
 
-        PlayerPrefs.SetInt(PLAYER_PREFS_SOUND, isSoundOn ? 1 : 0);
+        GameDataManager.Instance.WriteFile();
     }
 
     public bool GetVibration()
     {
-        return isVibrationOn;
+        return GameDataManager.Instance.GetGameData().Vibration;
     }
 
     public void SetVibration(bool value)
     {
-        isVibrationOn = value;
+        GameDataManager.Instance.GetGameData().Vibration = value;
 
-        PlayerPrefs.SetInt(PLAYER_PREFS_VIBRATION, isVibrationOn ? 1 : 0);
+        GameDataManager.Instance.WriteFile();
     }
 
     public void PlayButtonClickSound()

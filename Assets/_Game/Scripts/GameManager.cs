@@ -63,6 +63,7 @@ public class GameManager : Singleton<GameManager>
 
         UIManager.Instance.CloseAll();
         UIManager.Instance.OpenUI<MainMenuCanvas>();
+        UIManager.Instance.OpenUI<CurrencyCanvas>();
     }
 
     public void StartGame()
@@ -116,7 +117,7 @@ public class GameManager : Singleton<GameManager>
 
         Player.Instance.ChangeAnim(CharacterAnimator.Anim.Dance);
 
-        UIManager.Instance.CloseAll();
+        UIManager.Instance.CloseUI<MainMenuCanvas>();
         UIManager.Instance.OpenUI<SkinShopCanvas>();
     }
 
@@ -124,9 +125,10 @@ public class GameManager : Singleton<GameManager>
     {
         cameraFollow.ChangeState(CameraFollow.State.MainMenu);
 
+        Player.Instance.SetPlayerSkin(null);
         Player.Instance.ChangeAnim(CharacterAnimator.Anim.Idle);
 
-        UIManager.Instance.CloseAll();
+        UIManager.Instance.CloseUI<SkinShopCanvas>();
         UIManager.Instance.OpenUI<MainMenuCanvas>();
     }
 
@@ -136,7 +138,7 @@ public class GameManager : Singleton<GameManager>
 
         Player.Instance.ChangeAnim(CharacterAnimator.Anim.Dance);
 
-        UIManager.Instance.CloseAll();
+        UIManager.Instance.CloseUI<MainMenuCanvas>();
         UIManager.Instance.OpenUI<WeaponShopCanvas>();
     }
 
@@ -146,7 +148,7 @@ public class GameManager : Singleton<GameManager>
 
         Player.Instance.ChangeAnim(CharacterAnimator.Anim.Idle);
 
-        UIManager.Instance.CloseAll();
+        UIManager.Instance.CloseUI<WeaponShopCanvas>();
         UIManager.Instance.OpenUI<MainMenuCanvas>();
     }
 
@@ -165,17 +167,10 @@ public class GameManager : Singleton<GameManager>
 
         UIManager.Instance.CloseAll();
 
-        StartCoroutine(DelayActionCoroutine(3.0f, () =>
+        StartCoroutine(Utilities.DelayActionCoroutine(3.0f, () =>
         {
             delayAction?.Invoke();
         }));
-    }
-
-    private IEnumerator DelayActionCoroutine(float delayTime, Action action)
-    {
-        yield return new WaitForSeconds(delayTime);
-
-        action?.Invoke();
     }
 
     private void ResetStaticData()

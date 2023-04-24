@@ -5,7 +5,7 @@ using UnityEngine;
 public class HammerBullet : Bullet
 {
     private float surviveTimer;
-    private float surviveTime = 1.25f;
+    private float surviveTime = 0.8f;
 
     public override void PrepareToUse()
     {
@@ -25,7 +25,7 @@ public class HammerBullet : Bullet
         }
         else
         {
-            transform.Rotate(Vector3.right * 360.0f * Time.deltaTime);
+            transform.Rotate(Vector3.up * -720.0f * Time.deltaTime);
         }
     }
 

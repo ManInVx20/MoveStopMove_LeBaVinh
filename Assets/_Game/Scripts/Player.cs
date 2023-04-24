@@ -15,8 +15,7 @@ public class Player : Character
     public int Rank { get; private set; }
     public int Gold { get; private set; }
 
-    private const float MIN_MOVE_DISTANCE = 0.1f;
-    private const string PLAYER_PREFS_PLAYER_NAME = "PlayerName";
+    private const float MIN_MOVE_DISTANCE = 0.01f;
 
     private Joystick joystick;
     private Vector3 moveDirection;
@@ -67,7 +66,55 @@ public class Player : Character
     {
         SetName(value);
 
-        PlayerPrefs.SetString(PLAYER_PREFS_PLAYER_NAME, GetName());
+        GameDataManager.Instance.GetGameData().PlayerName = GetName();
+
+        GameDataManager.Instance.WriteFile();
+    }
+
+    public void SetPlayerSkin(SkinSO skinSO, bool pernament = true)
+    {
+        if (pernament)
+        {
+            UpdateSkinSO(GameDataManager.Instance.GetGameData().GetSkinSOBySkinType(SkinType.Hat),
+                GameDataManager.Instance.GetGameData().GetSkinSOBySkinType(SkinType.Pant),
+                GameDataManager.Instance.GetGameData().GetSkinSOBySkinType(SkinType.Accessary),
+                GameDataManager.Instance.GetGameData().GetSkinSOBySkinType(SkinType.FullSet),
+                true);
+        }
+        else
+        {
+            switch (skinSO.SkinType)
+            {
+                case SkinType.Hat:
+                    UpdateSkinSO(skinSO,
+                        GameDataManager.Instance.GetGameData().GetSkinSOBySkinType(SkinType.Pant),
+                        GameDataManager.Instance.GetGameData().GetSkinSOBySkinType(SkinType.Accessary),
+                        null,
+                        false);
+                    break;
+                case SkinType.Pant:
+                    UpdateSkinSO(GameDataManager.Instance.GetGameData().GetSkinSOBySkinType(SkinType.Hat),
+                        skinSO,
+                        GameDataManager.Instance.GetGameData().GetSkinSOBySkinType(SkinType.Accessary),
+                        null,
+                        false);
+                    break;
+                case SkinType.Accessary:
+                    UpdateSkinSO(GameDataManager.Instance.GetGameData().GetSkinSOBySkinType(SkinType.Hat),
+                        GameDataManager.Instance.GetGameData().GetSkinSOBySkinType(SkinType.Pant),
+                        skinSO,
+                        null,
+                        false);
+                    break;
+                case SkinType.FullSet:
+                    UpdateSkinSO(null,
+                        null,
+                        null,
+                        skinSO,
+                        false);
+                    break;
+            }
+        }
     }
 
     protected override void Initialize()
@@ -84,7 +131,7 @@ public class Player : Character
         GetAgent().Warp(Vector3.zero);
         transform.localRotation = Quaternion.identity;
 
-        SetPlayerName(PlayerPrefs.GetString(PLAYER_PREFS_PLAYER_NAME, PLAYER_NAME_DEFAULT));
+        SetPlayerName(GameDataManager.Instance.GetGameData().PlayerName);
         SetLevel(1);
 
         Killer = null;
@@ -111,14 +158,17 @@ public class Player : Character
         objectColorSO = ResourceManager.Instance.GetFirstUnusedObjectColorSO();
     }
 
-    protected override void GetSkinSetSO(out SkinSetSO skinSetSO)
+    protected override void GetSkinSO(out SkinSO hatSkinSO, out SkinSO pantSkinSO, out SkinSO shieldSkinSO, out SkinSO fullSetSkinSO)
     {
-        skinSetSO = ResourceManager.Instance.GetSelectedSkinSetSO();
+        hatSkinSO = GameDataManager.Instance.GetGameData().HatSkinSO;
+        pantSkinSO = GameDataManager.Instance.GetGameData().PantSkinSO;
+        shieldSkinSO = GameDataManager.Instance.GetGameData().ShieldSkinSO;
+        fullSetSkinSO = GameDataManager.Instance.GetGameData().FullSetSkinSO;
     }
 
     protected override void GetWeaponSO(out WeaponSO weaponSO)
     {
-        weaponSO = ResourceManager.Instance.GetSelectedWeaponSO();
+        weaponSO = GameDataManager.Instance.GetGameData().WeaponSO;
     }
 
     private void HandleInput()
@@ -138,13 +188,13 @@ public class Player : Character
 
     private void HandleMovement()
     {
-        if (moveDirection != Vector3.zero)
+        if (moveDirection.sqrMagnitude >= MIN_MOVE_DISTANCE)
         {
             Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, GetAgent().angularSpeed * Time.deltaTime);
         }
 
-        if (moveDirection.magnitude >= MIN_MOVE_DISTANCE)
+        if (moveDirection.sqrMagnitude >= MIN_MOVE_DISTANCE)
         {
             GetAgent().Move(moveDirection * GetAgent().speed * GetMultiplier() * Time.deltaTime);
 
@@ -158,16 +208,19 @@ public class Player : Character
     {
         if (moveDirection.magnitude < MIN_MOVE_DISTANCE)
         {
-            if (!HasTarget())
+            if (!Attacked())
             {
-                ChangeAnim(CharacterAnimator.Anim.Idle);
-            }
-            else if (!Attacked())
-            {
-                Attack();
+                if (!HasTarget())
+                {
+                    ChangeAnim(CharacterAnimator.Anim.Idle);
+                }
+                else
+                {
+                    Attack();
 
-                throwTimer = 0.0f;
-                thrown = false;
+                    throwTimer = 0.0f;
+                    thrown = false;
+                }
             }
         }
 

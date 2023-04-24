@@ -21,6 +21,7 @@ public class BotSpawner : MonoBehaviour
     private int botDespawnedCountPerInterval;
     private float spawnTimer;
     private float spawnTime = 5.0f;
+    private bool isSpawning = false;
 
     private void Start()
     {
@@ -29,7 +30,7 @@ public class BotSpawner : MonoBehaviour
 
         UIManager.Instance.GetUI<GameplayCanvas>().SetSurvivalText(botRemainingCount);
 
-        SpawnBots(true);
+        SpawnBots(firstSpawnCount, true);
 
         Bot.OnAnyBotDeath += Bot_OnAnyBotDeath;
         Bot.OnAnyBotDespawned += Bot_OnAnyBotDespawned;
@@ -37,29 +38,32 @@ public class BotSpawner : MonoBehaviour
 
     private void Update()
     {
-        if (botSpawnedCount < botMaxCount)
+        if (botSpawnedCount < botMaxCount && botDespawnedCountPerInterval > 0)
         {
             spawnTimer += Time.deltaTime;
             if (spawnTimer >= spawnTime)
             {
                 spawnTimer = 0.0f;
 
-                SpawnBots();
+                int botToSpawnCount = botDespawnedCountPerInterval;
 
-                botDespawnedCountPerInterval = 0;
+                SpawnBots(botToSpawnCount);
+
+                botDespawnedCountPerInterval -= botToSpawnCount;
             }
         }
     }
 
-    private void SpawnBots(bool firstWave = false)
+    private void SpawnBots(int botToSpawnCount, bool firstWave = false)
     {
         List<Transform> safeSpawnPointList = GetSafeSpawnPointList();
 
-        int maxIndex = firstWave ? firstSpawnCount : Mathf.Min(botDespawnedCountPerInterval, botRemainingCount);
+        int maxIndex = Mathf.Min(botToSpawnCount, botRemainingCount);
         maxIndex = Mathf.Min(maxIndex, safeSpawnPointList.Count);
+
         for (int i = 0; i < maxIndex; i++)
         {
-            if (botSpawnedCount == botMaxCount)
+            if (botRemainingCount == 0 || botSpawnedCount == botMaxCount)
             {
                 return;
             }
@@ -113,7 +117,7 @@ public class BotSpawner : MonoBehaviour
 
         for (int i = 0; i < colliderArray.Length; i++)
         {
-            if (colliderArray[i].TryGetComponent<Character>(out Character character))
+            if (Cache.TryGetCharacter(colliderArray[i], out _))
             {
                 return false;
             }

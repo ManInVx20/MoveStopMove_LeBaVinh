@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,8 +7,8 @@ public static class Utilities
 {
     public static Vector3 GetRandomHorizontalDirection()
     {
-        float randomX = Random.Range(-1.0f, 1.0f);
-        float randomZ = Random.Range(-1.0f, 1.0f);
+        float randomX = UnityEngine.Random.Range(-1.0f, 1.0f);
+        float randomZ = UnityEngine.Random.Range(-1.0f, 1.0f);
 
         return new Vector3(randomX, 0.0f, randomZ).normalized;
     }
@@ -23,5 +24,12 @@ public static class Utilities
         }
 
         return null;
+    }
+
+    public static IEnumerator DelayActionCoroutine(float delayTime, Action action)
+    {
+        yield return new WaitForSeconds(delayTime);
+
+        action?.Invoke();
     }
 }

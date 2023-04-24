@@ -7,6 +7,8 @@ using UnityEngine.UI;
 public class ShopSkinPage : MonoBehaviour
 {
     [SerializeField]
+    private SkinType shopSkinType;
+    [SerializeField]
     private ShopSkin shopSkinPrefab;
     [SerializeField]
     private Transform contentTransform;
@@ -28,7 +30,7 @@ public class ShopSkinPage : MonoBehaviour
         {
             SoundManager.Instance.PlayButtonClickSound();
 
-            if (ResourceManager.Instance.TryBuySkinSet(selectedShopSkin.GetSkinSetSO()))
+            if (ResourceManager.Instance.TryBuySkin(selectedShopSkin.GetSkinSO()))
             {
                 UpdateButtons();
 
@@ -39,7 +41,7 @@ public class ShopSkinPage : MonoBehaviour
         {
             SoundManager.Instance.PlayButtonClickSound();
 
-            ResourceManager.Instance.ChangeSkinSet(selectedShopSkin.GetSkinSetSO());
+            ResourceManager.Instance.SelectSkin(selectedShopSkin.GetSkinSO());
 
             UpdateButtons();
         });
@@ -47,17 +49,19 @@ public class ShopSkinPage : MonoBehaviour
         {
             SoundManager.Instance.PlayButtonClickSound();
 
-            ResourceManager.Instance.ChangeSkinSet(null);
+            ResourceManager.Instance.UnselectSkin(selectedShopSkin.GetSkinSO());
 
             UpdateButtons();
         });
+
+        CreateAllSkins();
     }
 
-    private void Start()
+    private void OnEnable()
     {
-        CreateAllSkins();
+        ResetScrollview();
 
-        if (shopSkinList.Count > 0)
+        if (shopSkinList != null && shopSkinList.Count > 0)
         {
             OnShopSkinSelected(shopSkinList[0]);
         }
@@ -70,6 +74,8 @@ public class ShopSkinPage : MonoBehaviour
         ResetSkins();
 
         shopSkin.Activate();
+
+        ResourceManager.Instance.TrySkin(shopSkin.GetSkinSO());
 
         UpdateButtons();
     }
@@ -86,13 +92,14 @@ public class ShopSkinPage : MonoBehaviour
 
     private void CreateAllSkins()
     {
-        List<SkinSetSO> skinSetSOList = ResourceManager.Instance.SkinSetListSO.SkinSetSOList;
+        List<SkinSO> skinSOList = ResourceManager.Instance.GetSkinSOListBySkinType(shopSkinType);
+
         shopSkinList = new List<ShopSkin>();
 
-        for (int i = 0; i < skinSetSOList.Count; i++)
+        for (int i = 0; i < skinSOList.Count; i++)
         {
             ShopSkin shopSkin = Instantiate(shopSkinPrefab, contentTransform);
-            shopSkin.Initialize(this, skinSetSOList[i]);
+            shopSkin.Initialize(this, skinSOList[i]);
 
             shopSkinList.Add(shopSkin);
         }
@@ -115,9 +122,9 @@ public class ShopSkinPage : MonoBehaviour
 
     private void UpdateButtons()
     {
-        if (ResourceManager.Instance.IsSkinSetUnlocked(selectedShopSkin.GetSkinSetSO()))
+        if (ResourceManager.Instance.IsSkinUnlocked(selectedShopSkin.GetSkinSO()))
         {
-            if (ResourceManager.Instance.IsSkinSetSelected(selectedShopSkin.GetSkinSetSO()))
+            if (ResourceManager.Instance.IsSkinSelected(selectedShopSkin.GetSkinSO()))
             {
                 unlockButton.gameObject.SetActive(false);
                 selectButton.gameObject.SetActive(false);
@@ -132,11 +139,28 @@ public class ShopSkinPage : MonoBehaviour
         }
         else
         {
-            costText.text = selectedShopSkin.GetSkinSetSO().Cost.ToString();
+            int cost = selectedShopSkin.GetSkinSO().Cost;
+            costText.text = cost.ToString();
+
+            if (cost > ResourceManager.Instance.GetGoldAmount())
+            {
+                unlockButton.interactable = false;
+            }
+            else
+            {
+                unlockButton.interactable = true;
+            }
 
             unlockButton.gameObject.SetActive(true);
             selectButton.gameObject.SetActive(false);
             unselectButton.gameObject.SetActive(false);
         }
+    }
+
+    private void ResetScrollview()
+    {
+        Vector3 originLocalPosition = contentTransform.localPosition;
+        originLocalPosition.x = 0.0f;
+        contentTransform.localPosition = originLocalPosition;
     }
 }

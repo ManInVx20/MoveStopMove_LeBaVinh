@@ -11,7 +11,7 @@ public class TabGroup : MonoBehaviour
 
     private TabButton selectedTabButton;
 
-    private void Start()
+    private void OnEnable()
     {
         if (tabButtonList != null && tabButtonList.Count > 0)
         {
@@ -37,19 +37,7 @@ public class TabGroup : MonoBehaviour
 
         tabButton.ActiveTab();
 
-        int selectedTabIndex = tabButtonList.IndexOf(selectedTabButton);
-
-        for (int i = 0; i < skinPageLists.Count; i++)
-        {
-            if (i == selectedTabIndex)
-            {
-                skinPageLists[i].Show();
-            }
-            else
-            {
-                skinPageLists[i].Hide();
-            }
-        }
+        UpdatePages();
     }
 
     private void ResetTabs()
@@ -65,8 +53,20 @@ public class TabGroup : MonoBehaviour
         }
     }
 
-    private void ResetPages()
+    private void UpdatePages()
     {
-        
+        int selectedTabIndex = tabButtonList.IndexOf(selectedTabButton);
+
+        for (int i = 0; i < skinPageLists.Count; i++)
+        {
+            if (i == selectedTabIndex)
+            {
+                skinPageLists[i].Show();
+            }
+            else
+            {
+                skinPageLists[i].Hide();
+            }
+        }
     }
 }

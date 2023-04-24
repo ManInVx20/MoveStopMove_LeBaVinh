@@ -16,74 +16,100 @@ public class CharacterVisual : MonoBehaviour
     private Transform wingTransform;
     [SerializeField]
     private Transform tailTransform;
-
-    private SkinSetSO skinSetSO;
+    [SerializeField]
+    private Transform shieldTransform;
 
     public void SetBodyMaterial(Material material)
     {
         bodySkinnedMeshRenderer.material = material;
     }
 
-    public void SetSkinSet(SkinSetSO skinSetSO)
+    public void SetPant(SkinSO pantSkinSO)
     {
-        this.skinSetSO = skinSetSO;
+        if (pantSkinSO == null)
+        {
+            return;
+        }
 
-        if (skinSetSO.BodyMaterial != null)
+        if (pantSkinSO.PantMaterial != null)
         {
-            bodySkinnedMeshRenderer.material = skinSetSO.BodyMaterial;
-        }
-        if (skinSetSO.PantMaterial != null)
-        {
-            pantSkinnedMeshRenderer.material = skinSetSO.PantMaterial;
+            pantSkinnedMeshRenderer.material = pantSkinSO.PantMaterial;
             pantSkinnedMeshRenderer.gameObject.SetActive(true);
-        }
-        if (skinSetSO.HatPrefab != null)
-        {
-            Instantiate(skinSetSO.HatPrefab, hatTransform);
-        }
-        if (skinSetSO.TopHatPrefab != null)
-        {
-            Instantiate(skinSetSO.TopHatPrefab, topHatTransform);
-        }
-        if (skinSetSO.WingPrefab != null)
-        {
-            Instantiate(skinSetSO.WingPrefab, wingTransform);
-        }
-        if (skinSetSO.TailPrefab != null)
-        {
-            Instantiate(skinSetSO.TailPrefab, tailTransform);
         }
     }
 
-    public void ResetSkinSet()
+    public void SetHat(SkinSO hatSkinSO)
     {
-        if (skinSetSO != null)
+        if (hatSkinSO == null)
         {
-            skinSetSO = null;
-
-            pantSkinnedMeshRenderer.gameObject.SetActive(false);
-
-            hatTransform.ClearChildren();
-            topHatTransform.ClearChildren();
-            wingTransform.ClearChildren();
-            tailTransform.ClearChildren();
-
-            //if (hatTransform.childCount > 0)
-            //{
-            //    Destroy(hatTransform.GetChild(0).gameObject);
-            //}
-            //if (topHatTransform.childCount > 0)
-            //{
-            //    Destroy(topHatTransform.GetChild(0).gameObject);
-            //}
-            //if (wingTransform.childCount > 0)
-            //{
-            //    Destroy(wingTransform.GetChild(0).gameObject);
-            //}
-            //if (tailTransform.childCount > 0)
-            //{
-            //    Destroy(tailTransform.GetChild(0).gameObject);
-            //}
+            return;
         }
+
+        if (hatSkinSO.HatPrefab != null)
+        {
+            Instantiate(hatSkinSO.HatPrefab, hatTransform);
+        }
+    }
+
+    public void SetShield(SkinSO shieldSkinSO)
+    {
+        if (shieldSkinSO == null)
+        {
+            return;
+        }
+
+        if (shieldSkinSO.ShieldPrefab != null)
+        {
+            Instantiate(shieldSkinSO.ShieldPrefab, shieldTransform);
+        }
+    }
+
+    public void SetSet(SkinSO fullSetSkinSO)
+    {
+        if (fullSetSkinSO == null)
+        {
+            return;
+        }
+
+        if (fullSetSkinSO.BodyMaterial != null)
+        {
+            bodySkinnedMeshRenderer.material = fullSetSkinSO.BodyMaterial;
+        }
+        if (fullSetSkinSO.PantMaterial != null)
+        {
+            pantSkinnedMeshRenderer.material = fullSetSkinSO.PantMaterial;
+            pantSkinnedMeshRenderer.gameObject.SetActive(true);
+        }
+        if (fullSetSkinSO.HatPrefab != null)
+        {
+            Instantiate(fullSetSkinSO.HatPrefab, hatTransform);
+        }
+        if (fullSetSkinSO.TopHatPrefab != null)
+        {
+            Instantiate(fullSetSkinSO.TopHatPrefab, topHatTransform);
+        }
+        if (fullSetSkinSO.WingPrefab != null)
+        {
+            Instantiate(fullSetSkinSO.WingPrefab, wingTransform);
+        }
+        if (fullSetSkinSO.TailPrefab != null)
+        {
+            Instantiate(fullSetSkinSO.TailPrefab, tailTransform);
+        }
+        if (fullSetSkinSO.ShieldPrefab != null)
+        {
+            Instantiate(fullSetSkinSO.ShieldPrefab, shieldTransform);
+        }
+    }
+
+    public void ResetSkin()
+    {
+        pantSkinnedMeshRenderer.gameObject.SetActive(false);
+
+        hatTransform.ClearChildren();
+        topHatTransform.ClearChildren();
+        wingTransform.ClearChildren();
+        tailTransform.ClearChildren();
+        shieldTransform.ClearChildren();
     }
 }

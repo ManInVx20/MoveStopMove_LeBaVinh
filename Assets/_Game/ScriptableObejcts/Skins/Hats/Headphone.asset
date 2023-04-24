@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64ab00e2ed2b606418194e0e58dbaa2a, type: 3}
+  m_Name: Headphone
+  m_EditorClassIdentifier: 
+  Name: Headphone
+  Cost: 50
+  Sprite: {fileID: 21300000, guid: 5b5b1c4516f218046a3c9c9b608164ee, type: 3}
+  BodyMaterial: {fileID: 0}
+  PantMaterial: {fileID: 0}
+  HatPrefab: {fileID: 8912067454107229719, guid: e8d30e82fdab322428943608f6286051, type: 3}
+  TopHatPrefab: {fileID: 0}
+  WingPrefab: {fileID: 0}
+  TailPrefab: {fileID: 0}
+  ShieldPrefab: {fileID: 0}

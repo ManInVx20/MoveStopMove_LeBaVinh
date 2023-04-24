@@ -9,34 +9,64 @@ public class ShopSkin : MonoBehaviour, IPointerClickHandler
     [SerializeField]
     private Image skinImage;
     [SerializeField]
+    private Transform skinHolderTransform;
+    [SerializeField]
     private GameObject selectedGameObject;
     [SerializeField]
     private GameObject lockedGameObject;
 
     private ShopSkinPage skinPage;
-    private SkinSetSO skinSetSO;
+    private SkinSO skinSO;
 
     private void Awake()
     {
         Deactivate();
     }
 
-    public void Initialize(ShopSkinPage page, SkinSetSO skinSetSO)
+    public void Initialize(ShopSkinPage page, SkinSO skinSO)
     {
         this.skinPage = page;
-        this.skinSetSO = skinSetSO;
+        this.skinSO = skinSO;
 
-        skinImage.sprite = this.skinSetSO.Sprite;
+        if (skinSO.Sprite != null)
+        {
+            skinImage.sprite = this.skinSO.Sprite;
+        }
+        else
+        {
+            skinImage.gameObject.SetActive(false);
 
-        if (ResourceManager.Instance.IsSkinSetUnlocked(skinSetSO))
+            GameObject skinGameObject = new GameObject();
+
+            switch (skinSO.SkinType)
+            {
+                case SkinType.Hat:
+                    skinGameObject = Instantiate(skinSO.HatPrefab, skinHolderTransform);
+                    break;
+                case SkinType.Pant:
+                    skinGameObject = Instantiate(ResourceManager.Instance.PantPrefab, skinHolderTransform);
+                    skinGameObject.GetComponentInChildren<SkinnedMeshRenderer>().material = skinSO.PantMaterial;
+                    break;
+                case SkinType.Accessary:
+                    skinGameObject = Instantiate(skinSO.HatPrefab, skinHolderTransform);
+                    break;
+                case SkinType.FullSet:
+                    skinGameObject = Instantiate(skinSO.HatPrefab, skinHolderTransform);
+                    break;
+            }
+
+            skinGameObject.transform.SetLayer(LayerMask.NameToLayer("UI"), true);
+        }
+
+        if (ResourceManager.Instance.IsSkinUnlocked(skinSO))
         {
             HideLockedGameObject();
         }
     }
 
-    public SkinSetSO GetSkinSetSO()
+    public SkinSO GetSkinSO()
     {
-        return skinSetSO;
+        return skinSO;
     }
 
     public void HideLockedGameObject()

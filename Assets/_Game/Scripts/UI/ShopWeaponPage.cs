@@ -66,13 +66,13 @@ public class ShopWeaponPage : MonoBehaviour
 
             UpdateButtons();
         });
+
+        CreateAllWeapons();
     }
 
-    private void Start()
+    private void OnEnable()
     {
-        CreateAllWeapons();
-
-        if (shopWeaponList.Count > 0)
+        if (shopWeaponList != null && shopWeaponList.Count > 0)
         {
             shopWeaponIndex = 0;
 
@@ -139,8 +139,17 @@ public class ShopWeaponPage : MonoBehaviour
         }
         else
         {
-            costText.text = selectedShopWeapon.GetWeaponSO().Cost.ToString();
+            int cost = selectedShopWeapon.GetWeaponSO().Cost;
+            costText.text = cost.ToString();
 
+            if (cost > ResourceManager.Instance.GetGoldAmount())
+            {
+                unlockButton.interactable = false;
+            }
+            else
+            {
+                unlockButton.interactable = true;
+            }
             unlockButton.gameObject.SetActive(true);
             selectButton.gameObject.SetActive(false);
             inUseButton.gameObject.SetActive(false);

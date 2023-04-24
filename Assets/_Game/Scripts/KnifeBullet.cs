@@ -5,7 +5,7 @@ using UnityEngine;
 public class KnifeBullet : Bullet
 {
     private float surviveTimer;
-    private float surviveTime = 1.25f;
+    private float surviveTime = 0.8f;
 
     public override void PrepareToUse()
     {
