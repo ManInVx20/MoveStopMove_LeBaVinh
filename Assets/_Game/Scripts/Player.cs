@@ -21,7 +21,10 @@ public class Player : Character
     private Vector3 moveDirection;
     private bool thrown;
     private float throwTimer;
-    private float throwTime = 0.35f;
+    private float throwTimerMax = 0.35f;
+    private bool boosted;
+    private float boostTimer;
+    private float boostTimerMax = 1.0f;
 
     public override void Victory()
     {
@@ -62,6 +65,9 @@ public class Player : Character
 
             GameManager.Instance.Victory();
         }
+
+        boosted = true;
+        boostTimer = 0.0f;
     }
 
     public void SetPlayerName(string value)
@@ -150,6 +156,7 @@ public class Player : Character
         HandleInput();
         HandleMovement();
         HandleAttack();
+        HandleBooster();
     }
 
     protected override void GetObjectColorSO(out ObjectColorSO objectColorSO)
@@ -199,7 +206,14 @@ public class Player : Character
 
         if (moveDirection.sqrMagnitude >= MIN_MOVE_DISTANCE)
         {
-            GetAgent().Move(moveDirection * GetAgent().speed * GetMultiplier() * Time.deltaTime);
+            if (boosted)
+            {
+                GetAgent().Move(moveDirection * GetAgent().speed * GetMultiplier() * 1.5f * Time.deltaTime);
+            }
+            else
+            {
+                GetAgent().Move(moveDirection * GetAgent().speed * GetMultiplier() * Time.deltaTime);
+            }
 
             ChangeAnim(CharacterAnimator.Anim.Run);
 
@@ -230,11 +244,23 @@ public class Player : Character
         if (Attacked())
         {
             throwTimer += Time.deltaTime;
-            if (!thrown && throwTimer >= throwTime)
+            if (!thrown && throwTimer >= throwTimerMax)
             {
                 thrown = true;
 
                 Throw();
+            }
+        }
+    }
+
+    private void HandleBooster()
+    {
+        if (boosted)
+        {
+            boostTimer += Time.deltaTime;
+            if (boostTimer >= boostTimerMax)
+            {
+                boosted = false;
             }
         }
     }
