@@ -262,7 +262,7 @@ MonoBehaviour:
   hammerWeaponHolder: {fileID: 698840725776187798}
   boomerangWeaponHolder: {fileID: 4352400217053428843}
   throwPoint: {fileID: 2229561906932172937}
-  sizeDelta: 0.025
+  sizeDelta: 0.04
   hitVFX: {fileID: 7273537501809049318}
   levelUpVFX: {fileID: 5506161492199909002}
 --- !u!1 &8591372774641112766

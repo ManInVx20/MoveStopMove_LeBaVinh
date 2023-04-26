@@ -32,4 +32,11 @@ public static class Utilities
 
         action?.Invoke();
     }
+
+    public static IEnumerator DelayActionRealtimeCoroutine(float delayTime, Action action)
+    {
+        yield return new WaitForSecondsRealtime(delayTime);
+
+        action?.Invoke();
+    }
 }

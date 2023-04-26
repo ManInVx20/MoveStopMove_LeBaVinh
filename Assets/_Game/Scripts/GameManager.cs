@@ -10,6 +10,8 @@ public class GameManager : Singleton<GameManager>
 
     [SerializeField]
     private CameraFollow cameraFollow;
+    [SerializeField]
+    private Camera UICamera;
 
     private enum State
     {
@@ -61,6 +63,8 @@ public class GameManager : Singleton<GameManager>
 
         cameraFollow.ChangeState(CameraFollow.State.MainMenu);
 
+        UICamera.gameObject.SetActive(true);
+
         UIManager.Instance.CloseAll();
         UIManager.Instance.OpenUI<MainMenuCanvas>();
         UIManager.Instance.OpenUI<CurrencyCanvas>();
@@ -74,8 +78,11 @@ public class GameManager : Singleton<GameManager>
 
         cameraFollow.ChangeState(CameraFollow.State.Gameplay);
 
+        UICamera.gameObject.SetActive(false);
+
         UIManager.Instance.CloseAll();
         UIManager.Instance.OpenUI<GameplayCanvas>();
+        UIManager.Instance.OpenUI<TopBarCanvas>();
         UIManager.Instance.OpenUI<ControlCanvas>();
     }
 

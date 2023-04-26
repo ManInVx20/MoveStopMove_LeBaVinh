@@ -32,7 +32,7 @@ public class GameDataManager : Singleton<GameDataManager>
 
     public void WriteFile()
     {
-        string jsonString = JsonUtility.ToJson(gameData);
+        string jsonString = JsonUtility.ToJson(gameData, true);
 
         File.WriteAllText(saveFilePath, jsonString);
     }

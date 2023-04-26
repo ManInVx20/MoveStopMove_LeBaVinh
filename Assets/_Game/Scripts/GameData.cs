@@ -8,13 +8,13 @@ public class GameData
     public int LevelIndex;
     public int GoldAmount;
     public string PlayerName;
-    public SkinSO HatSkinSO;
-    public SkinSO PantSkinSO;
-    public SkinSO ShieldSkinSO;
-    public SkinSO FullSetSkinSO;
-    public WeaponSO WeaponSO;
-    public List<SkinSO> UnlockedSkinSOList;
-    public List<WeaponSO> UnlockedWeaponSOList;
+    public string HatSkinName;
+    public string PantSkinName;
+    public string ShieldSkinName;
+    public string FullSetSkinName;
+    public string WeaponName;
+    public List<string> UnlockedSkinNameList;
+    public List<string> UnlockedWeaponNameList;
     public bool Sound;
     public bool Vibration;
 
@@ -23,55 +23,38 @@ public class GameData
         LevelIndex = 0;
         GoldAmount = 0;
         PlayerName = "You";
-        HatSkinSO = null;
-        PantSkinSO = null;
-        ShieldSkinSO = null;
-        FullSetSkinSO = null;
-        WeaponSO = null;
-        UnlockedSkinSOList = new List<SkinSO>();
-        UnlockedWeaponSOList = new List<WeaponSO>();
+        HatSkinName = null;
+        PantSkinName = null;
+        ShieldSkinName = null;
+        FullSetSkinName = null;
+        WeaponName = null;
+        UnlockedSkinNameList = new List<string>();
+        UnlockedWeaponNameList = new List<string>();
         Sound = true;
         Vibration = true;
     }
 
-    public SkinSO GetSkinSOBySkinType(SkinType skinType)
+    public void SetSkinNameBySkinType(SkinType skinType, SkinSO skinSO)
     {
         switch (skinType)
         {
             case SkinType.Hat:
-                return HatSkinSO;
-            case SkinType.Pant:
-                return PantSkinSO;
-            case SkinType.Accessary:
-                return ShieldSkinSO;
-            case SkinType.FullSet:
-                return FullSetSkinSO;
-            default:
-                return null;
-        }
-    }
-
-    public void SetSkinSOBySkinType(SkinType skinType, SkinSO skinSO)
-    {
-        switch (skinType)
-        {
-            case SkinType.Hat:
-                HatSkinSO = skinSO;
-                FullSetSkinSO = null;
+                HatSkinName = skinSO?.Name;
+                FullSetSkinName = null;
                 break;
             case SkinType.Pant:
-                PantSkinSO = skinSO;
-                FullSetSkinSO = null;
+                PantSkinName = skinSO?.Name;
+                FullSetSkinName = null;
                 break;
             case SkinType.Accessary:
-                ShieldSkinSO = skinSO;
-                FullSetSkinSO = null;
+                ShieldSkinName = skinSO?.Name;
+                FullSetSkinName = null;
                 break;
             case SkinType.FullSet:
-                FullSetSkinSO = skinSO;
-                HatSkinSO = null;
-                PantSkinSO = null;
-                ShieldSkinSO = null;
+                FullSetSkinName = skinSO?.Name;
+                HatSkinName = null;
+                PantSkinName = null;
+                ShieldSkinName = null;
                 break;
         }
     }

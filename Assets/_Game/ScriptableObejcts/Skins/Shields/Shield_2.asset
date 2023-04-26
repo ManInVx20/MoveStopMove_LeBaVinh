@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Shield_2
   m_EditorClassIdentifier: 
   SkinType: 2
-  Name: Shield 1
+  Name: Shield 2
   Cost: 50
   Sprite: {fileID: 21300000, guid: 314ae189aaf33f34ea3cfae3672c7f7e, type: 3}
   BodyMaterial: {fileID: 0}

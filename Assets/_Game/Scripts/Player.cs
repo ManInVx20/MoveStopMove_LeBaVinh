@@ -44,6 +44,8 @@ public class Player : Character
     {
         base.LevelUp(target);
 
+        Instantiate(ResourceManager.Instance.LevelUpPrefab, UIManager.Instance.GetUI<GameplayCanvas>().transform).Initialize(1);
+
         if (GetLevel() <= target.GetLevel())
         {
             Gold += 1;
@@ -73,47 +75,44 @@ public class Player : Character
 
     public void SetPlayerSkin(SkinSO skinSO, bool pernament = true)
     {
+        SkinSO hatSkinSO = ResourceManager.Instance.GetSkinSOBySkinTypeAndSkinName(SkinType.Hat,
+            GameDataManager.Instance.GetGameData().HatSkinName);
+        SkinSO pantSkinSO = ResourceManager.Instance.GetSkinSOBySkinTypeAndSkinName(SkinType.Pant,
+            GameDataManager.Instance.GetGameData().PantSkinName);
+        SkinSO shieldSkinSO = ResourceManager.Instance.GetSkinSOBySkinTypeAndSkinName(SkinType.Accessary,
+            GameDataManager.Instance.GetGameData().ShieldSkinName);
+        SkinSO fullSetSkinSO = ResourceManager.Instance.GetSkinSOBySkinTypeAndSkinName(SkinType.FullSet,
+            GameDataManager.Instance.GetGameData().FullSetSkinName);
+
         if (pernament)
         {
-            UpdateSkinSO(GameDataManager.Instance.GetGameData().GetSkinSOBySkinType(SkinType.Hat),
-                GameDataManager.Instance.GetGameData().GetSkinSOBySkinType(SkinType.Pant),
-                GameDataManager.Instance.GetGameData().GetSkinSOBySkinType(SkinType.Accessary),
-                GameDataManager.Instance.GetGameData().GetSkinSOBySkinType(SkinType.FullSet),
-                true);
+            UpdateSkinSO(hatSkinSO, pantSkinSO, shieldSkinSO, fullSetSkinSO);
         }
         else
         {
             switch (skinSO.SkinType)
             {
                 case SkinType.Hat:
-                    UpdateSkinSO(skinSO,
-                        GameDataManager.Instance.GetGameData().GetSkinSOBySkinType(SkinType.Pant),
-                        GameDataManager.Instance.GetGameData().GetSkinSOBySkinType(SkinType.Accessary),
-                        null,
-                        false);
+                    hatSkinSO = skinSO;
+                    fullSetSkinSO = null;
                     break;
                 case SkinType.Pant:
-                    UpdateSkinSO(GameDataManager.Instance.GetGameData().GetSkinSOBySkinType(SkinType.Hat),
-                        skinSO,
-                        GameDataManager.Instance.GetGameData().GetSkinSOBySkinType(SkinType.Accessary),
-                        null,
-                        false);
+                    pantSkinSO = skinSO;
+                    fullSetSkinSO = null;
                     break;
                 case SkinType.Accessary:
-                    UpdateSkinSO(GameDataManager.Instance.GetGameData().GetSkinSOBySkinType(SkinType.Hat),
-                        GameDataManager.Instance.GetGameData().GetSkinSOBySkinType(SkinType.Pant),
-                        skinSO,
-                        null,
-                        false);
+                    shieldSkinSO = skinSO;
+                    fullSetSkinSO = null;
                     break;
                 case SkinType.FullSet:
-                    UpdateSkinSO(null,
-                        null,
-                        null,
-                        skinSO,
-                        false);
+                    hatSkinSO = null;
+                    pantSkinSO = null;
+                    shieldSkinSO = null;
+                    fullSetSkinSO = skinSO;
                     break;
             }
+
+            UpdateSkinSO(hatSkinSO, pantSkinSO, shieldSkinSO, fullSetSkinSO, false);
         }
     }
 
@@ -160,15 +159,19 @@ public class Player : Character
 
     protected override void GetSkinSO(out SkinSO hatSkinSO, out SkinSO pantSkinSO, out SkinSO shieldSkinSO, out SkinSO fullSetSkinSO)
     {
-        hatSkinSO = GameDataManager.Instance.GetGameData().HatSkinSO;
-        pantSkinSO = GameDataManager.Instance.GetGameData().PantSkinSO;
-        shieldSkinSO = GameDataManager.Instance.GetGameData().ShieldSkinSO;
-        fullSetSkinSO = GameDataManager.Instance.GetGameData().FullSetSkinSO;
+        hatSkinSO = ResourceManager.Instance.GetSkinSOBySkinTypeAndSkinName(SkinType.Hat,
+            GameDataManager.Instance.GetGameData().HatSkinName);
+        pantSkinSO = ResourceManager.Instance.GetSkinSOBySkinTypeAndSkinName(SkinType.Pant,
+            GameDataManager.Instance.GetGameData().PantSkinName);
+        shieldSkinSO = ResourceManager.Instance.GetSkinSOBySkinTypeAndSkinName(SkinType.Accessary,
+            GameDataManager.Instance.GetGameData().ShieldSkinName);
+        fullSetSkinSO = ResourceManager.Instance.GetSkinSOBySkinTypeAndSkinName(SkinType.FullSet,
+            GameDataManager.Instance.GetGameData().FullSetSkinName);
     }
 
     protected override void GetWeaponSO(out WeaponSO weaponSO)
     {
-        weaponSO = GameDataManager.Instance.GetGameData().WeaponSO;
+        weaponSO = ResourceManager.Instance.GetWeaponSOByName(GameDataManager.Instance.GetGameData().WeaponName);
     }
 
     private void HandleInput()

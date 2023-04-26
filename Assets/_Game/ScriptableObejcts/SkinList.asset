@@ -34,7 +34,7 @@ MonoBehaviour:
   AccessarySkinSOList:
   - {fileID: 11400000, guid: c8a37223669caf34aaddcd55cd4bde85, type: 2}
   - {fileID: 11400000, guid: a13566a9cd7db834a9e29f71703b05e8, type: 2}
-  SetSkinSOList:
+  FullSetSkinSOList:
   - {fileID: 11400000, guid: a8394a95d500c3545a361c286d51c597, type: 2}
   - {fileID: 11400000, guid: bf467fcda7a58ec41ac65c9f1de09a8f, type: 2}
   - {fileID: 11400000, guid: ee583829c33cff145b225c1353dad865, type: 2}

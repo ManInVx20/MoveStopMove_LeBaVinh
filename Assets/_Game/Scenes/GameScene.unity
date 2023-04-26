@@ -251,6 +251,7 @@ MonoBehaviour:
   - {fileID: 3425391061961796824, guid: 644816e0592236644b1e15e6fce22242, type: 3}
   - {fileID: 3425391061961796824, guid: 7bae69cd7a1dd3b4caaacf16ba5474a8, type: 3}
   <PantPrefab>k__BackingField: {fileID: 21485849092921947, guid: 34bb3ff13ea55b441826225010bdd734, type: 3}
+  <LevelUpPrefab>k__BackingField: {fileID: 7627623487514341994, guid: 0514e9bf4ed9c1e48bfd26a1aa97815c, type: 3}
 --- !u!114 &398855565
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -674,6 +675,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cameraFollow: {fileID: 963194229}
+  UICamera: {fileID: 334991980}
 --- !u!4 &1001853768
 Transform:
   m_ObjectHideFlags: 0

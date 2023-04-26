@@ -21,14 +21,14 @@ public class BotSpawner : MonoBehaviour
     private int botDespawnedCountPerInterval;
     private float spawnTimer;
     private float spawnTime = 5.0f;
-    private bool isSpawning = false;
 
     private void Start()
     {
         botRemainingCount = botMaxCount;
         botSpawnedCount = 0;
 
-        UIManager.Instance.GetUI<GameplayCanvas>().SetSurvivalText(botRemainingCount);
+        UIManager.Instance.GetUI<TopBarCanvas>().SetSurvivalText(botRemainingCount);
+        UIManager.Instance.CloseUI<TopBarCanvas>();
 
         SpawnBots(firstSpawnCount, true);
 
@@ -88,7 +88,7 @@ public class BotSpawner : MonoBehaviour
     {
         botRemainingCount -= 1;
 
-        UIManager.Instance.GetUI<GameplayCanvas>().SetSurvivalText(botRemainingCount);
+        UIManager.Instance.GetUI<TopBarCanvas>().SetSurvivalText(botRemainingCount);
     }
 
     private void Bot_OnAnyBotDespawned(object sender, EventArgs args)

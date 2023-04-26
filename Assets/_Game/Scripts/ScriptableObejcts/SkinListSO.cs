@@ -8,5 +8,5 @@ public class SkinListSO : ScriptableObject
     public List<SkinSO> HatSkinSOList;
     public List<SkinSO> PantSkinSOList;
     public List<SkinSO> AccessarySkinSOList;
-    public List<SkinSO> SetSkinSOList;
+    public List<SkinSO> FullSetSkinSOList;
 }

@@ -37,6 +37,7 @@ public class SettingsCanvas : UICanvas
             GameManager.Instance.ResumeGame();
 
             UIManager.Instance.OpenUI<GameplayCanvas>();
+            UIManager.Instance.OpenUI<TopBarCanvas>();
             UIManager.Instance.OpenUI<ControlCanvas>();
 
             CloseDirectly();
