@@ -18,7 +18,7 @@ public class ResourceManager : Singleton<ResourceManager>
     [field: SerializeField]
     public GameObject PantPrefab { get; private set; }
     [field: SerializeField]
-    public LevelUp LevelUpPrefab { get; private set; }
+    public FlyTextUI FlyTextUIPrefab { get; private set; }
 
     public event EventHandler OnGoldAmountChanged;
 
@@ -82,7 +82,7 @@ public class ResourceManager : Singleton<ResourceManager>
     public string GetRandomName()
     {
         int randomIndex = UnityEngine.Random.Range(0, remainingObjectColorList.Count);
-        string name = remainingNameListSO[randomIndex];
+        string name = string.Copy(remainingNameListSO[randomIndex]);
 
         remainingNameListSO.RemoveAt(randomIndex);
 
@@ -278,7 +278,7 @@ public class ResourceManager : Singleton<ResourceManager>
 
         for (int i = 0; i < NameListSO.NameList.Count; i++)
         {
-            remainingNameListSO.Add(string.Copy(NameListSO.NameList[i]));
+            remainingNameListSO.Add(string.Copy(NameListSO.NameList[i]).ToString());
         }
     }
 

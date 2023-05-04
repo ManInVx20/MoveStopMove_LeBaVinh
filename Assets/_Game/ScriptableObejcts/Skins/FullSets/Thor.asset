@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SkinType: 3
   Name: Thor Set
-  Cost: 100
+  Cost: 150
   Sprite: {fileID: 21300000, guid: 0363a7557b133774f99bf84dcf6fcbed, type: 3}
   BodyMaterial: {fileID: 2100000, guid: 1ecfd4cb2b091dc4796a381b366b075a, type: 2}
   PantMaterial: {fileID: 0}

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7627623487514341993}
   - component: {fileID: 7627623487514341994}
   m_Layer: 0
-  m_Name: LevelUp
+  m_Name: FlyTextUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -66,10 +66,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 7627623487514341988}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c58341aecb295eb4f8af049a6e625622, type: 3}
+  m_Script: {fileID: 11500000, guid: 63108ebad72bc8b44a13fe4033d3ffc8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelUpText: {fileID: 7627623488951839951}
+  flyText: {fileID: 7627623488951839951}
 --- !u!1 &7627623488951839945
 GameObject:
   m_ObjectHideFlags: 0

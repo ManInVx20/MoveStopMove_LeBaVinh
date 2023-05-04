@@ -20,7 +20,7 @@ public class BotSpawner : MonoBehaviour
     private int botRemainingCount;
     private int botDespawnedCountPerInterval;
     private float spawnTimer;
-    private float spawnTime = 5.0f;
+    private float spawnTimerMax = 5.0f;
 
     private void Start()
     {
@@ -41,7 +41,7 @@ public class BotSpawner : MonoBehaviour
         if (botSpawnedCount < botMaxCount && botDespawnedCountPerInterval > 0)
         {
             spawnTimer += Time.deltaTime;
-            if (spawnTimer >= spawnTime)
+            if (spawnTimer >= spawnTimerMax)
             {
                 spawnTimer = 0.0f;
 
@@ -63,7 +63,7 @@ public class BotSpawner : MonoBehaviour
 
         for (int i = 0; i < maxIndex; i++)
         {
-            if (botRemainingCount == 0 || botSpawnedCount == botMaxCount)
+            if (botSpawnedCount == botMaxCount)
             {
                 return;
             }

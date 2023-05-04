@@ -10,19 +10,17 @@ public class LevelManager : Singleton<LevelManager>
 
     private void Awake()
     {
-        mainCamera = Camera.main;
-    }
-
-    private void Start()
-    {
         levelIndex = GameDataManager.Instance.GetGameData().LevelIndex;
+        mainCamera = Camera.main;
     }
 
     public void NextLevel()
     {
         if (levelIndex < ResourceManager.Instance.LevelPrefabs.Length)
         {
-            GameDataManager.Instance.GetGameData().LevelIndex += 1;
+            levelIndex += 1;
+
+            GameDataManager.Instance.GetGameData().LevelIndex = levelIndex;
 
             GameDataManager.Instance.WriteFile();
         }

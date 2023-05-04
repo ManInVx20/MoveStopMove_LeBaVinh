@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SkinType: 3
   Name: Angel Set
-  Cost: 100
+  Cost: 150
   Sprite: {fileID: 21300000, guid: 9f8e6f5ea0f849447b464193072ab6f3, type: 3}
   BodyMaterial: {fileID: 2100000, guid: b3a7d0ccf3c76f64dac22ffcf0916fa9, type: 2}
   PantMaterial: {fileID: 2100000, guid: e7fb1aeef8008d84f8fe77eaf332e02d, type: 2}

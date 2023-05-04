@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Xml.Serialization;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -36,6 +35,7 @@ public class Character : PoolableObject
     private ParticleSystem levelUpVFX;
 
     private NavMeshAgent agent;
+    private CapsuleCollider capsuleCollider;
     private CharacterInfoUI characterInfoUI;
     private ObjectColorSO objectColorSO;
     private WeaponSO weaponSO;
@@ -49,7 +49,10 @@ public class Character : PoolableObject
     private bool attacked;
     private bool despawned;
     private float despawnTimer;
-    private float despawnTime = 3.0f;
+    private float despawnTimerMax = 3.0f;
+    private bool boosted;
+    private float boostTimer;
+    private float boostTimerMax = 3.0f;
     private float multiplier = 1.0f;
     private string charName = "Name";
     private int charLevel = 1;
@@ -78,7 +81,7 @@ public class Character : PoolableObject
     {
         Begin();
 
-        ChangeSize();
+        ChangeSize(charLevel);
 
         OnCharacterStarted?.Invoke(this, EventArgs.Empty);
     }
@@ -252,9 +255,16 @@ public class Character : PoolableObject
 
     public virtual void LevelUp(Character target)
     {
-        SetLevel(charLevel + 1);
+        if (charLevel >= target.GetLevel())
+        {
+            SetLevel(charLevel + 1);
+        }
+        else
+        {
+            SetLevel(charLevel + 2);
+        }
 
-        ChangeSize();
+        ChangeSize(charLevel);
 
         levelUpVFX.Play();
 
@@ -306,18 +316,31 @@ public class Character : PoolableObject
         SoundManager.Instance.PlayDeathSound(transform.position);
     }
 
+    public virtual void Boost()
+    {
+        boosted = true;
+        boostTimer = 0.0f;
+
+        int modifier = charLevel / 5;
+        int tempCharLevel = charLevel * (2 - modifier / (modifier + 1));
+        ChangeSize(tempCharLevel);
+    }
+
     protected virtual void Initialize()
     {
         agent = GetComponent<NavMeshAgent>();
+        capsuleCollider = GetComponent<CapsuleCollider>();
     }
 
     protected virtual void Begin()
     {
         isDead = false;
         agent.enabled = true;
+        capsuleCollider.enabled = true;
         despawnTimer = 0.0f;
         despawned = false;
         target = null;
+        boosted = false;
 
         ResetAttack();
 
@@ -358,12 +381,23 @@ public class Character : PoolableObject
 
     protected virtual void Execute()
     {
-        if (isDead && !despawned)
+        if (IsDead() && !despawned)
         {
             despawnTimer += Time.deltaTime;
-            if (despawnTimer >= despawnTime)
+            if (despawnTimer >= despawnTimerMax)
             {
                 Despawn();
+            }
+        }
+
+        if (!IsDead() && boosted)
+        {
+            boostTimer += Time.deltaTime;
+            if (boostTimer >= boostTimerMax)
+            {
+                boosted = false;
+
+                ChangeSize(charLevel);
             }
         }
     }
@@ -371,7 +405,10 @@ public class Character : PoolableObject
     protected virtual void Despawn()
     {
         despawned = true;
+        capsuleCollider.enabled = false;
+
     }
+
 
     protected virtual void GetObjectColorSO(out ObjectColorSO objectColorSO)
     {
@@ -391,7 +428,7 @@ public class Character : PoolableObject
         weaponSO = null;
     }
 
-    private void ChangeSize()
+    private void ChangeSize(int charLevel)
     {
         multiplier = 1.0f + sizeDelta * (charLevel - 1);
         transform.localScale = Vector3.one * multiplier;

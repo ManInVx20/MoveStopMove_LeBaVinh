@@ -30,14 +30,17 @@ public class Bullet : PoolableObject
             {
                 SoundManager.Instance.PlayHitSound(transform.position);
 
-                character.Hit(owner);
+                if (!character.IsDead())
+                {
+                    character.Hit(owner);
+
+                    if (!owner.IsDead())
+                    {
+                        owner.LevelUp(character);
+                    }
+                }
 
                 Despawn();
-
-                if (!owner.IsDead())
-                {
-                    owner.LevelUp(character);
-                }
             }
         }
 

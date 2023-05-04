@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -22,9 +21,6 @@ public class Player : Character
     private bool thrown;
     private float throwTimer;
     private float throwTimerMax = 0.35f;
-    private bool boosted;
-    private float boostTimer;
-    private float boostTimerMax = 1.0f;
 
     public override void Victory()
     {
@@ -45,9 +41,19 @@ public class Player : Character
 
     public override void LevelUp(Character target)
     {
-        base.LevelUp(target);
+        string levelUpText = "+";
+        if (GetLevel() >= target.GetLevel())
+        {
+            levelUpText += 1;
+        }
+        else
+        {
+            levelUpText += 2;
+        }
+        FlyTextUI flyTextUI = Instantiate(ResourceManager.Instance.FlyTextUIPrefab, UIManager.Instance.GetUI<GameplayCanvas>().transform);
+        flyTextUI.Initialize(levelUpText, FlyTextUI.Position.Right);
 
-        Instantiate(ResourceManager.Instance.LevelUpPrefab, UIManager.Instance.GetUI<GameplayCanvas>().transform).Initialize(1);
+        base.LevelUp(target);
 
         if (GetLevel() <= target.GetLevel())
         {
@@ -61,13 +67,19 @@ public class Player : Character
         Rank = LevelManager.Instance.GetBotSpawner().BotRemainingCount + 1;
         if (Rank == 1)
         {
+            flyTextUI.Despawn();
+
             Victory();
 
             GameManager.Instance.Victory();
         }
+    }
 
-        boosted = true;
-        boostTimer = 0.0f;
+    public override void Boost()
+    {
+        base.Boost();
+
+        Instantiate(ResourceManager.Instance.FlyTextUIPrefab, UIManager.Instance.GetUI<GameplayCanvas>().transform).Initialize("Boost!", FlyTextUI.Position.Left);
     }
 
     public void SetPlayerName(string value)
@@ -156,7 +168,6 @@ public class Player : Character
         HandleInput();
         HandleMovement();
         HandleAttack();
-        HandleBooster();
     }
 
     protected override void GetObjectColorSO(out ObjectColorSO objectColorSO)
@@ -206,14 +217,7 @@ public class Player : Character
 
         if (moveDirection.sqrMagnitude >= MIN_MOVE_DISTANCE)
         {
-            if (boosted)
-            {
-                GetAgent().Move(moveDirection * GetAgent().speed * GetMultiplier() * 1.5f * Time.deltaTime);
-            }
-            else
-            {
-                GetAgent().Move(moveDirection * GetAgent().speed * GetMultiplier() * Time.deltaTime);
-            }
+            GetAgent().Move(moveDirection * GetAgent().speed * GetMultiplier() * Time.deltaTime);
 
             ChangeAnim(CharacterAnimator.Anim.Run);
 
@@ -249,18 +253,6 @@ public class Player : Character
                 thrown = true;
 
                 Throw();
-            }
-        }
-    }
-
-    private void HandleBooster()
-    {
-        if (boosted)
-        {
-            boostTimer += Time.deltaTime;
-            if (boostTimer >= boostTimerMax)
-            {
-                boosted = false;
             }
         }
     }

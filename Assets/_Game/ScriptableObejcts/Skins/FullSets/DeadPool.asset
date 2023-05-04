@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SkinType: 3
   Name: Dead Pool Set
-  Cost: 100
+  Cost: 150
   Sprite: {fileID: 21300000, guid: 7965f490c2ec6044d854d957fe85186e, type: 3}
   BodyMaterial: {fileID: 2100000, guid: 0c5dad3c45990234895aec26129eeffc, type: 2}
   PantMaterial: {fileID: 0}
